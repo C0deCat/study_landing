@@ -4,6 +4,18 @@
   box-sizing: border-box;
 }
 
+h1,
+p,
+ul,
+ol {
+  margin: 0;
+}
+
+h2 {
+  margin: 0;
+  margin-bottom: 8px;
+}
+
 body {
   margin: 0;
   font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -48,47 +60,75 @@ header {
   backdrop-filter: blur(6px);
 }
 
-.logo {
-  width: 60px;
-  height: 60px;
-  position: relative;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+#triforce {
+  margin: 50px auto;
+  width: 200px;
+  height: 200px;
 }
-
-.logo::before,
-.logo::after,
-.logo span::before {
+#triangle {
+  content: "";
+  position: relative;
+  width: 0px;
+  height: 0px;
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+  border-bottom: 104px solid #ffbc00;
+}
+#triangle:before {
   content: "";
   position: absolute;
-  width: 0;
-  height: 0;
-  border-left: 14px solid transparent;
-  border-right: 14px solid transparent;
-  border-bottom: 24px solid #f5d742;
-}
-
-.logo::before {
-  top: 14px;
-}
-
-.logo::after {
-  top: 28px;
-  left: 12px;
-}
-
-.logo span::before {
-  top: 28px;
-  right: 12px;
-}
-
-.logo span {
   display: block;
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+  border-bottom: 104px solid #ffbc00;
+  top: 104px;
+  left: -120px;
+}
+#triangle:after {
+  content: "";
   position: absolute;
-  inset: 0;
+  display: block;
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+  border-bottom: 104px solid #ffbc00;
+  top: 104px;
+}
+#shadow {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: relative;
+  z-index: -1;
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+  border-top: 104px solid #ff8c00;
+  transform: rotate(60deg);
+  -webkit-transform: rotate(60deg);
+  -moz-transform: rotate(60deg);
+  -ms-transform: rotate(60deg);
+  -o-transform: rotate(60deg);
+  top: 27px;
+  left: -73px;
+}
+#shadow:before {
+  content: "";
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+  border-top: 104px solid #ff8c00;
+  position: absolute;
+  display: block;
+  top: 0px;
+  left: 0px;
+}
+#shadow:after {
+  content: "";
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+  border-top: 104px solid #ff8c00;
+  position: absolute;
+  display: block;
+  top: -104px;
+  left: 60px;
 }
 
 nav {
