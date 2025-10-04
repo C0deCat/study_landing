@@ -1,0 +1,255 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #f5f5f5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 0;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("assets/backdrop.jpg") center/cover no-repeat;
+  filter: blur(10px);
+  transform: scale(1.1);
+  z-index: -2;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 18, 24, 0.7);
+  z-index: -1;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 8vw;
+  background: rgba(12, 16, 24, 0.75);
+  backdrop-filter: blur(6px);
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo::before,
+.logo::after,
+.logo span::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-bottom: 24px solid #f5d742;
+}
+
+.logo::before {
+  top: 14px;
+}
+
+.logo::after {
+  top: 28px;
+  left: 12px;
+}
+
+.logo span::before {
+  top: 28px;
+  right: 12px;
+}
+
+.logo span {
+  display: block;
+  position: absolute;
+  inset: 0;
+}
+
+nav {
+  display: flex;
+  gap: 24px;
+}
+
+nav a,
+nav span {
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  color: #e8e8e8;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+nav a:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+nav span {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 8vw 60px;
+  gap: 32px;
+}
+
+.tab-control {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.topics {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.topics label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px;
+  border-radius: 999px;
+  background: rgba(34, 40, 52, 0.8);
+  color: #f0f0f0;
+  border: 1px solid transparent;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.topics label:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.topics label:focus-visible {
+  outline: 2px solid #f5d742;
+  outline-offset: 4px;
+}
+
+.article {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+  background: rgba(17, 22, 32, 0.75);
+  padding: 24px 28px;
+  border-radius: 16px;
+  line-height: 1.6;
+}
+
+.article figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.article img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.article figcaption {
+  font-size: 0.9rem;
+  text-align: center;
+  color: rgba(229, 232, 239, 0.8);
+}
+
+#llm:checked ~ .topics label[for="llm"],
+#code:checked ~ .topics label[for="code"],
+#media:checked ~ .topics label[for="media"],
+#life:checked ~ .topics label[for="life"],
+#russia:checked ~ .topics label[for="russia"] {
+  background: #f5d742;
+  color: #1a1e26;
+}
+
+#llm:checked ~ .articles #llm-article,
+#code:checked ~ .articles #code-article,
+#media:checked ~ .articles #media-article,
+#life:checked ~ .articles #life-article,
+#russia:checked ~ .articles #russia-article {
+  display: flex;
+}
+
+.media-gallery {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.media-gallery img {
+  flex: 1 1 220px;
+  object-fit: cover;
+}
+
+footer {
+  background: rgba(12, 16, 24, 0.8);
+  padding: 20px 8vw;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  font-size: 0.95rem;
+}
+
+footer a {
+  color: #f5d742;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+footer a:hover {
+  color: #fff6a4;
+}
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .article {
+    padding: 20px;
+  }
+}
