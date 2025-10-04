@@ -61,37 +61,37 @@ header {
 }
 
 #triforce {
-  margin: 50px auto;
-  width: 200px;
-  height: 200px;
+  width: 80px;
+  height: 71px;
 }
 #triangle {
   content: "";
   position: relative;
   width: 0px;
   height: 0px;
-  border-left: 60px solid transparent;
-  border-right: 60px solid transparent;
-  border-bottom: 104px solid #ffbc00;
+  left: 20px;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 35px solid #ffbc00;
 }
 #triangle:before {
   content: "";
   position: absolute;
   display: block;
-  border-left: 60px solid transparent;
-  border-right: 60px solid transparent;
-  border-bottom: 104px solid #ffbc00;
-  top: 104px;
-  left: -120px;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 35px solid #ffbc00;
+  top: 35px;
+  left: -40px;
 }
 #triangle:after {
   content: "";
   position: absolute;
   display: block;
-  border-left: 60px solid transparent;
-  border-right: 60px solid transparent;
-  border-bottom: 104px solid #ffbc00;
-  top: 104px;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 35px solid #ffbc00;
+  top: 35px;
 }
 #shadow {
   content: "";
@@ -99,22 +99,22 @@ header {
   height: 0px;
   position: relative;
   z-index: -1;
-  border-left: 60px solid transparent;
-  border-right: 60px solid transparent;
-  border-top: 104px solid #ff8c00;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 35px solid #ff8c00;
   transform: rotate(60deg);
   -webkit-transform: rotate(60deg);
   -moz-transform: rotate(60deg);
   -ms-transform: rotate(60deg);
   -o-transform: rotate(60deg);
-  top: 27px;
-  left: -73px;
+  top: 9px;
+  left: -24px;
 }
 #shadow:before {
   content: "";
-  border-left: 60px solid transparent;
-  border-right: 60px solid transparent;
-  border-top: 104px solid #ff8c00;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 35px solid #ff8c00;
   position: absolute;
   display: block;
   top: 0px;
@@ -122,13 +122,13 @@ header {
 }
 #shadow:after {
   content: "";
-  border-left: 60px solid transparent;
-  border-right: 60px solid transparent;
-  border-top: 104px solid #ff8c00;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 35px solid #ff8c00;
   position: absolute;
   display: block;
-  top: -104px;
-  left: 60px;
+  top: -35px;
+  left: 20px;
 }
 
 nav {
