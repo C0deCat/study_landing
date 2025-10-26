@@ -1,0 +1,56 @@
+main {
+  align-items: center;
+  justify-content: center;
+}
+
+content {
+  /* Переменные для цветов арта */
+  --bg: white;
+  --wood: #b07f52;
+  --wood-dark: #46270c;
+  --pot: #c50a29;
+  --pot-shadow: #bdc5cf;
+
+  display: block;
+  position: relative;
+  width: 200px;
+  height: 200px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+content * {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+}
+
+/* TABLE (center) */
+tabletop {
+  width: 90px;
+  height: 12px;
+  left: 55px; /* centered: (200 - 90) / 2 */
+  top: 96px;
+  background: var(--wood);
+  z-index: 2;
+}
+
+tableleg {
+  width: 20px;
+  height: 70px;
+  left: 92px; /* centered under tabletop */
+  top: 100px;
+  background: var(--wood);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+tablebottom {
+  width: 40px;
+  height: 30px;
+  left: 82px;
+  top: 160px;
+  background: var(--wood);
+  clip-path: polygon(0% 100%, 100% 100%, 67% 0%, 33% 0%);
+  z-index: 0;
+}
