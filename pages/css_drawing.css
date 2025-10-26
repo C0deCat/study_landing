@@ -54,3 +54,96 @@ tablebottom {
   clip-path: polygon(0% 100%, 100% 100%, 67% 0%, 33% 0%);
   z-index: 0;
 }
+
+/* TEAPOT (on the table) */
+teabody {
+  width: 56px;
+  height: 38px;
+  left: 73px;
+  top: 58px; /* sits visually on tabletop at y=96 */
+  background: var(--pot);
+  border-radius: 50% / 60%;
+  z-index: 3;
+}
+
+teabody::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    87% 93% at 30% 30%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0) 65%
+  );
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+lid {
+  width: 32px;
+  height: 21px;
+  left: 84px;
+  top: 49px;
+  background: var(--pot);
+  border-radius: 50%;
+  z-index: 3;
+}
+lid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    80% 120% at 30% 35%,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0) 65%
+  );
+  filter: blur(3px);
+  pointer-events: none;
+}
+lid::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  left: 40%;
+  top: -3px;
+  background: var(--pot);
+  border-radius: 50%;
+}
+
+spout {
+  width: 20px;
+  height: 8px;
+  left: 63px;
+  top: 65px;
+  background: var(--pot);
+  border-radius: 2px;
+  transform: rotate(35deg);
+  z-index: 1;
+}
+
+handle {
+  width: 20px;
+  height: 21px;
+  left: 118px;
+  top: 63px;
+  z-index: 2;
+}
+/* Crescent-like handle via two ellipses */
+handle::before,
+handle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+handle::before {
+  background: var(--pot);
+}
+handle::after {
+  inset: 3px; /* thickness of the ring */
+  background: var(--bg); /* carve the inner hole */
+  transform: translateX(1px); /* slight offset to look like a crescent */
+}
