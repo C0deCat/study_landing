@@ -4,7 +4,7 @@ main {
 }
 
 content {
-  /* Переменные для цветов арта */
+  /* Color variables */
   --bg: white;
   --wood: #b07f52;
   --wood-dark: #46270c;
@@ -29,7 +29,7 @@ content * {
 tabletop {
   width: 90px;
   height: 12px;
-  left: 55px; /* centered: (200 - 90) / 2 */
+  left: 55px;
   top: 96px;
   background: var(--wood);
   z-index: 2;
@@ -60,7 +60,7 @@ teabody {
   width: 56px;
   height: 38px;
   left: 73px;
-  top: 58px; /* sits visually on tabletop at y=96 */
+  top: 58px;
   background: var(--pot);
   border-radius: 50% / 60%;
   z-index: 3;
@@ -131,6 +131,7 @@ handle {
   top: 63px;
   z-index: 2;
 }
+
 /* Crescent-like handle via two ellipses */
 handle::before,
 handle::after {
@@ -146,4 +147,86 @@ handle::after {
   inset: 3px; /* thickness of the ring */
   background: var(--bg); /* carve the inner hole */
   transform: translateX(1px); /* slight offset to look like a crescent */
+}
+
+/* CHAIRS (left & right) */
+
+/* Left chair (defaults) */
+seat {
+  width: 46px;
+  height: 10px;
+  left: 20px;
+  top: 130px;
+  background: var(--wood);
+  z-index: 1;
+}
+
+seat > decoration {
+  width: 8px;
+  height: 8px;
+  left: 17px;
+  top: 1px; /* centered vertically on the seat */
+  background: var(--wood-dark);
+  border-radius: 50%;
+  z-index: 1;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    top: 0;
+    background: var(--wood-dark);
+    border-radius: 50%;
+  }
+
+  &::before {
+    left: 15px;
+  }
+
+  &::after {
+    left: -15px;
+  }
+}
+
+leg {
+  width: 8px;
+  height: 40px;
+  left: 52px;
+  top: 140px;
+  background: var(--wood);
+  z-index: 0;
+}
+
+/* Crescent backrest (thin moon) built from two offset circles */
+backrest {
+  --thick: 1px; /* thickness of the crescent */
+  width: 35px;
+  height: 117px;
+  left: -11px;
+  top: 64px;
+  z-index: 0;
+}
+backrest::before,
+backrest::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+}
+backrest::before {
+  inset: 0;
+  background: var(--wood); /* outer disc */
+}
+backrest::after {
+  inset: var(--thick);
+  background: var(--bg); /* inner disc to carve */
+  transform: translateX(-6px);
+}
+
+/* ===== Right chair overrides ===== */
+chair.right {
+  transform: scaleX(-1); /* mirror horizontally */
+  left: auto;
+  right: 0px;
 }
