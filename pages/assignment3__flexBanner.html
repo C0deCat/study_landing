@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Флексбокс-баннер</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="flexboxBanner.css" />
+</head>
+
+<body>
+  <header>
+    <div id="triforce">
+      <div id="triangle" class="shadow">
+        <div id="shadow"></div>
+      </div>
+    </div>
+    <nav aria-label="Основное меню">
+      <a href="../index.html">Главная</a>
+      <details class="nav-dropdown">
+        <summary>Задания</summary>
+        <ul>
+          <li>
+            <a href="assignment2__cssDrawing.html">Задание 2. Рисунок CSS</a>
+          </li>
+          <li>
+            <a href="assignment3__flexBanner.html">Задание 3. Flexbox-реклама</a>
+          </li>
+        </ul>
+      </details>
+    </nav>
+  </header>
+  <main id="main">
+    <div class="sanatorium-wrapper">
+      <div class="sanatorium" id="sanatorium">
+        <img src="../assets/assignment2/field.jpg" alt="Поле" class="field-bg" />
+        <img src="../assets/assignment2/tree.png" alt="Ёлка" class="tree" />
+        <img src="../assets/assignment2/fox.png" alt="Лиса" class="fox" id="fox" />
+
+        <!-- Подсвеченный трейс, чтобы можно было легко настроить кривую -->
+        <svg width="200" height="200">
+          <path id="myPath" d="M 200 90 Q 100 -50 0 90" stroke="blue" stroke-width="2" fill="none"></path>
+        </svg>
+        <img src="../assets/assignment2/sun.png" alt="Солнце" class="sun" id="sun" />
+
+        <div class="title-hover">
+          Санаторий<br />"Родные просторы"
+        </div>
+        <div class="title-click" id="titleClick">
+          Лучший Отдых!
+        </div>
+      </div>
+  </main>
+  <footer>
+    <a href="https://t.me/C0deCat" target="_blank" rel="noopener">Telegram</a>
+    <a href="https://github.com/C0deCat" target="_blank" rel="noopener">GitHub</a>
+  </footer>
+  <script src="assignment3_flexBanner.js"></script>
+</body>
+
+</html>

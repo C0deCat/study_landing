@@ -130,23 +130,23 @@ handle {
   left: 118px;
   top: 63px;
   z-index: 2;
-}
 
-/* Crescent-like handle via two ellipses */
-handle::before,
-handle::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-}
-handle::before {
-  background: var(--pot);
-}
-handle::after {
-  inset: 3px; /* thickness of the ring */
-  background: var(--bg); /* carve the inner hole */
-  transform: translateX(1px); /* slight offset to look like a crescent */
+  /* Crescent-like handle via two ellipses */
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  }
+  &::before {
+    background: var(--pot);
+  }
+  &::after {
+    inset: 3px; /* thickness of the ring */
+    background: var(--bg); /* carve the inner hole */
+    transform: translateX(1px); /* slight offset to look like a crescent */
+  }
 }
 
 /* CHAIRS (left & right) */
@@ -207,24 +207,25 @@ backrest {
   left: -11px;
   top: 64px;
   z-index: 0;
-}
-backrest::before,
-backrest::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-}
-backrest::before {
-  inset: 0;
-  background: var(--wood); /* outer disc */
-}
-backrest::after {
-  inset: var(--thick);
-  background: var(--bg); /* inner disc to carve */
-  transform: translateX(-6px);
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+  }
+  &::before {
+    inset: 0;
+    background: var(--wood); /* outer disc */
+  }
+  &::after {
+    inset: var(--thick);
+    background: var(--bg); /* inner disc to carve */
+    transform: translateX(-6px);
+  }
 }
 
-/* ===== Right chair overrides ===== */
+/* Right chair overrides */
 chair.right {
   transform: scaleX(-1); /* mirror horizontally */
   left: auto;

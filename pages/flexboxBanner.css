@@ -1,0 +1,182 @@
+main {
+  align-items: center;
+  justify-content: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.sanatorium-wrapper {
+  width: 200px;
+  height: 200px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  user-select: none;
+}
+
+.sanatorium {
+  position: relative;
+  width: 200px;
+  height: 200px;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* фон полянки */
+.field-bg {
+  height: 100%;
+  z-index: 0;
+}
+
+/* Ёлка слева с отступом 5px */
+.tree {
+  position: absolute;
+  bottom: 0;
+  left: 5px;
+  width: 110px;
+  height: auto;
+  z-index: 2;
+}
+
+/* Лиса: старт за правым краем */
+.fox {
+  position: absolute;
+  bottom: 0;
+  width: 70px;
+  height: auto;
+
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform 1s ease, opacity 0.8s ease;
+
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Надпись при ховере */
+.title-hover {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 0;
+
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 16px;
+  color: black;
+
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Оранжевая надпись при клике */
+.title-click {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  color: orange;
+  text-align: center;
+
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Солнце */
+.sun {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  margin-left: -30px;
+
+  width: 60px;
+  height: auto;
+
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ==== Состояния и анимации ==== */
+
+/* При ховере — лиса подбегает к середине */
+.sanatorium:hover .fox {
+  transform: translateX(30px);
+  opacity: 1;
+}
+
+/* При ховере показываем текст,
+   НО класс .mouse-down будет его прятать */
+.sanatorium:hover .title-hover {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Если кнопка зажата — прячем ховер-надпись */
+.sanatorium.mouse-down .title-hover {
+  opacity: 0 !important;
+}
+
+/* Солнце активно: появляется и движется по дуге */
+.sun-active {
+  opacity: 1;
+  offset-path: url(#myPath);
+  animation: sun-arc 3s linear infinite;
+}
+
+/* Движение солнца по дуге (примерно полу-эллипс) */
+@keyframes sun-arc {
+  0%,
+  100% {
+    offset-distance: 0%;
+  }
+  50% {
+    offset-distance: 100%;
+  }
+}
+
+/* Тряска вверх-вниз после отжатия */
+@keyframes shake-vert {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-4px);
+  }
+  40% {
+    transform: translateY(4px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+  80% {
+    transform: translateY(3px);
+  }
+}
+
+.shake {
+  animation: shake-vert 0.4s ease-in-out;
+  animation-iteration-count: 4;
+}
