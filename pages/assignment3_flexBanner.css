@@ -27,8 +27,13 @@ main {
   justify-content: center;
   align-items: flex-end;
 
+  padding: 0;
+  border: none;
+  background: transparent;
   overflow: hidden;
   cursor: pointer;
+  outline: none;
+  animation: none;
 }
 
 /* фон полянки */
@@ -55,11 +60,15 @@ main {
   height: auto;
 
   transform: translateX(120%);
-  opacity: 0;
   transition: transform 1s ease, opacity 0.8s ease;
 
   pointer-events: none;
   z-index: 3;
+}
+
+.fox-default,
+.fox-headup {
+  opacity: 0;
 }
 
 /* Надпись при ховере */
@@ -87,10 +96,6 @@ main {
   position: absolute;
   inset: 0;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
   font-family: sans-serif;
   font-size: 16px;
   font-weight: bold;
@@ -116,33 +121,63 @@ main {
   opacity: 0;
   pointer-events: none;
   z-index: 1;
+  transition: opacity 0.3s ease;
 }
 
 /* ==== Состояния и анимации ==== */
 
-/* При ховере — лиса подбегает к середине */
-.sanatorium:hover .fox {
-  transform: translateX(30px);
-  opacity: 1;
-}
+.sanatorium {
+  /* При ховере — лиса подбегает к середине */
+  &:hover .fox {
+    transform: translateX(30px);
+  }
 
-/* При ховере показываем текст,
-   НО класс .mouse-down будет его прятать */
-.sanatorium:hover .title-hover {
-  opacity: 1;
-  transform: translateY(0);
-}
+  &:hover .fox-default {
+    opacity: 1;
+  }
 
-/* Если кнопка зажата — прячем ховер-надпись */
-.sanatorium.mouse-down .title-hover {
-  opacity: 0 !important;
-}
+  /* При ховере показываем текст */
+  &:hover .title-hover {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-/* Солнце активно: появляется и движется по дуге */
-.sun-active {
-  opacity: 1;
-  offset-path: url(#myPath);
-  animation: sun-arc 3s linear infinite;
+  /* Солнце активно: появляется и движется по дуге */
+  &:active .sun {
+    opacity: 1;
+    offset-path: url(#myPath);
+    animation: sun-arc 3s linear infinite;
+  }
+
+  &:active .fox-default {
+    opacity: 0;
+  }
+
+  &:active .fox-headup {
+    opacity: 1;
+  }
+
+  &:active .title-hover {
+    opacity: 0 !important;
+  }
+
+  &:active .title-click {
+    opacity: 1;
+  }
+
+  &:active {
+    animation: none;
+  }
+
+  &:focus:not(:active) {
+    animation: shake-vert 0.4s ease-in-out;
+    animation-iteration-count: 4;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #f9d24c;
+    outline-offset: 2px;
+  }
 }
 
 /* Движение солнца по дуге (примерно полу-эллипс) */
