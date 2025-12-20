@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Задание 4. DOM</title>
+    <title>Задание 5. Пазл с перетаскиванием</title>
     <link rel="stylesheet" href="../styles.css" />
-    <link rel="stylesheet" href="assignment4__DOM.css" />
+    <link rel="stylesheet" href="assignment5__puzzle.css" />
   </head>
   <body>
     <header>
@@ -39,17 +39,15 @@
     </header>
     <main id="main">
       <section class="content" aria-labelledby="assignment-title">
-        <h1 id="assignment-title">Задание 4. DOM</h1>
-        <p>
-          Создайте случайные пары латинских изречений и их переводов по нажатию
-          на кнопку. Номер строки отображается с подчёркиванием, латинский текст
-          выделяется курсивом, перевод — обычным шрифтом. Цвет фона зависит от
-          порядкового номера клика.
-        </p>
-        <div class="controls">
-          <button id="createPhrase" type="button">Создать</button>
+        <div class="content-header">
+          <h1 id="assignment-title">Задание 5. Перетаскивание</h1>
+          <p>
+            Соберите собаку из четырёх кусочков: перетаскивайте левой кнопкой
+            мыши, поворачивайте колёсиком, удерживая курсор над деталью.
+          </p>
         </div>
-        <div id="rand"></div>
+        <div id="puzzle-area" aria-live="polite"></div>
+        <button id="restart" type="button">Попробовать заново</button>
       </section>
     </main>
     <footer>
@@ -58,6 +56,6 @@
         >GitHub</a
       >
     </footer>
-    <script src="assignment4__DOM.js" defer></script>
+    <script src="assignment5__puzzle.js" defer></script>
   </body>
 </html>
