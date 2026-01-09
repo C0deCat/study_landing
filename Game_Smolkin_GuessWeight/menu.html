@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Угадай вес — Главное меню</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <strong>Угадай вес</strong>
+        <div class="badge">Курсовая работа</div>
+      </div>
+      <nav>
+        <a href="../index.html">На главную</a>
+        <a href="leaderboard.html">Рейтинг</a>
+      </nav>
+    </header>
+    <main>
+      <section class="panel">
+        <h1>Главное меню</h1>
+        <p>
+          Выберите уровень сложности стрелками, введите имя и начните игру
+          клавишей Enter.
+        </p>
+      </section>
+
+      <section class="panel">
+        <div class="menu-grid" id="difficulty-options"></div>
+      </section>
+
+      <section class="panel">
+        <label for="player-name">Имя игрока</label>
+        <input
+          type="text"
+          id="player-name"
+          placeholder="Например, Смолкин"
+          autocomplete="off"
+        />
+        <p class="error" id="name-error"></p>
+        <label for="timed-toggle">
+          <input type="checkbox" id="timed-toggle" /> Игра на время
+        </label>
+        <div class="menu-actions">
+          <button class="primary" id="start-game">Начать игру</button>
+          <a class="secondary" href="leaderboard.html">Таблица лидеров</a>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="menu.js"></script>
+  </body>
+</html>
