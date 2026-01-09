@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Угадай вес — главное меню</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="game-body">
+    <header>
+      <div id="triforce">
+        <div id="triangle" class="shadow">
+          <div id="shadow"></div>
+        </div>
+      </div>
+      <nav aria-label="Основное меню">
+        <a href="../index.html">Главная</a>
+        <details class="nav-dropdown">
+          <summary>Задания</summary>
+          <ul>
+            <li>
+              <a href="../pages/assignment2__cssDrawing.html"
+                >Задание 2. Рисунок CSS</a
+              >
+            </li>
+            <li>
+              <a href="../pages/assignment3__flexBanner.html"
+                >Задание 3. Flexbox-реклама</a
+              >
+            </li>
+            <li>
+              <a href="../pages/assignment4__DOM.html">Задание 4. DOM</a>
+            </li>
+            <li>
+              <a href="../pages/assignment5__puzzle.html">Задание 5. Пазл</a>
+            </li>
+          </ul>
+        </details>
+        <a href="index.html" aria-current="page">Курсовая работа</a>
+      </nav>
+    </header>
+    <main class="game-main">
+      <section class="menu-card" aria-labelledby="menu-title">
+        <header class="menu-header">
+          <h1 id="menu-title">Игра «Угадай вес»</h1>
+          <p>Укажите имя, выберите сложность и угадайте вес животных.</p>
+        </header>
+        <form class="menu-form" id="menuForm" autocomplete="off">
+          <label class="field">
+            <span>Имя игрока</span>
+            <input
+              type="text"
+              name="playerName"
+              id="playerName"
+              placeholder="Введите имя"
+              maxlength="20"
+              required
+            />
+          </label>
+          <div class="field">
+            <span>Сложность</span>
+            <div
+              class="difficulty-options"
+              id="difficultyOptions"
+              role="radiogroup"
+              aria-label="Выбор сложности"
+            ></div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="timedMode" />
+            <span class="toggle-ui"></span>
+            <span>Игра на время</span>
+          </label>
+          <div class="menu-actions">
+            <button type="submit" class="primary">Начать игру</button>
+            <a class="ghost" href="leaderboard.html">Таблица лидеров</a>
+          </div>
+          <p class="menu-hint" id="menuHint">
+            Управление: стрелки ↑ ↓ для выбора сложности, Enter — старт.
+          </p>
+        </form>
+      </section>
+    </main>
+    <footer class="game-footer">
+      <span>Курсова́я работа • Игра «Угадай вес»</span>
+    </footer>
+    <script type="module" src="scripts/menu.js"></script>
+  </body>
+</html>
