@@ -301,6 +301,7 @@ function saveScore() {
 
 function handleSubmit() {
   const value = Number(weightInput.value);
+  console.log("handleSubmit");
   if (!value || value <= 0) {
     hintText.textContent = "Введите корректное число.";
     return;
@@ -341,17 +342,12 @@ function setupInputHandlers() {
     }
     if (event.key === "Enter" && document.activeElement === weightInput) {
       event.preventDefault();
+      console.log("setupInputHandlers_handleSubmit");
       handleSubmit();
-    }
-  });
-
-  window.addEventListener("keydown", (event) => {
-    if (overlay.classList.contains("hidden")) {
-      return;
-    }
-    if (event.key === "Enter") {
+    } else if (event.key === "Enter" && !overlay.classList.contains("hidden")) {
       const primaryButton = modalActions.querySelector("button");
       if (primaryButton) {
+        console.log("setupInputHandlers_primaryButton");
         primaryButton.click();
       }
     }
