@@ -7,15 +7,15 @@ const puzzle_assets = [
 
 const result_coords = [
   { x: 0, y: 0 },
-  { x: 268, y: 202 },
-  { x: 60, y: 276 },
-  { x: 624, y: 212 },
+  { x: 136, y: 101 },
+  { x: 32, y: 138 },
+  { x: 313, y: 106 },
 ];
 
 // Включите, чтобы упростить подбор правильных координат result_coords.
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 // Управление размером кусочков
-const size_coeff = 0.4;
+const size_coeff = 0.2;
 // Приемлемая ошибка при проверке решения пазла (в пикселях)
 const ACCEPTABLE_ERROR = 5;
 
