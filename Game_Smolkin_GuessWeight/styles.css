@@ -208,8 +208,8 @@ input[type="number"] {
 
 .card-stage {
   position: relative;
-  overflow: hidden;
-  height: 320px;
+  overflow: visible;
+  min-height: 320px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -244,7 +244,7 @@ input[type="number"] {
 }
 
 .animal-placeholder {
-  height: 160px;
+  min-height: 160px;
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -253,6 +253,25 @@ input[type="number"] {
   color: rgba(0, 0, 0, 0.6);
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+.animal-placeholder.is-hidden {
+  display: none;
+}
+
+.animal-media {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.animal-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 16px;
+  object-fit: contain;
 }
 
 .hint {

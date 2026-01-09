@@ -82,16 +82,48 @@ function renderAttempts() {
   }
 }
 
+function adjustStageHeight(card) {
+  if (!card) {
+    return;
+  }
+  const height = card.offsetHeight;
+  if (height) {
+    cardStage.style.height = `${height}px`;
+  }
+}
+
 function createAnimalCard(animal) {
   const card = document.createElement("div");
   card.className = "animal-card";
+
   const title = document.createElement("h2");
   title.textContent = animal.name;
+
+  const media = document.createElement("div");
+  media.className = "animal-media";
+
+  const image = document.createElement("img");
+  image.className = "animal-image";
+  image.src = `./assets/${animal.id}.jpg`;
+  image.alt = `Фото: ${animal.name}`;
+
   const placeholder = document.createElement("div");
   placeholder.className = "animal-placeholder";
   placeholder.style.background = animal.color;
   placeholder.textContent = "Фото";
-  card.append(title, placeholder);
+
+  image.addEventListener("load", () => {
+    placeholder.classList.add("is-hidden");
+    adjustStageHeight(card);
+  });
+  image.addEventListener("error", () => {
+    image.remove();
+    placeholder.textContent = "Фото недоступно";
+    adjustStageHeight(card);
+  });
+
+  media.append(image, placeholder);
+  card.append(title, media);
   return card;
 }
 
@@ -114,6 +146,7 @@ function swapCard(animal) {
   cardStage.appendChild(newCard);
   requestAnimationFrame(() => {
     newCard.classList.add("enter-active");
+    adjustStageHeight(newCard);
   });
 }
 
