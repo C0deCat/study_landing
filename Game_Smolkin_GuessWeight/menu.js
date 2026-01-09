@@ -17,24 +17,40 @@ initLeaderboard();
 let selectedIndex = 0;
 const difficultyButtons = [];
 
-difficultyOrder.forEach((key, index) => {
-  const settings = difficulties[key];
-  const card = document.createElement("button");
-  card.type = "button";
-  card.className = "difficulty-card";
-  card.dataset.difficulty = key;
-  card.innerHTML = `
+const renderDifficultySettings = () => {
+  difficultyContainer.innerHTML = "";
+
+  difficultyOrder.forEach((key, index) => {
+    const settings = difficulties[key];
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "difficulty-card";
+    card.dataset.difficulty = key;
+    card.innerHTML = `
     <div class="difficulty-title">${settings.label}</div>
-    <p>Попытки: ${settings.attempts}</p>
-    <p>Таймер: ${settings.timeLimit} сек.</p>
-    <p>Множитель: x${settings.multiplier}</p>
-  `;
-  card.addEventListener("click", () => {
-    selectDifficulty(index);
+    <p>Попытки: ${settings.attempts}</p>`;
+
+    if (timeToggle.checked) {
+      card.innerHTML += `
+      <p>Таймер: ${settings.timeLimit} сек.</p>
+      <p>Множитель: x${settings.multiplier * 2}</p>
+      `;
+    } else {
+      card.innerHTML += `
+      <p>Множитель: x${settings.multiplier}</p>
+      `;
+    }
+
+    card.addEventListener("click", () => {
+      selectDifficulty(index);
+    });
+    difficultyButtons.push(card);
+    difficultyContainer.appendChild(card);
   });
-  difficultyButtons.push(card);
-  difficultyContainer.appendChild(card);
-});
+};
+
+renderDifficultySettings();
+timeToggle.addEventListener("change", renderDifficultySettings);
 
 function selectDifficulty(index) {
   selectedIndex = index;

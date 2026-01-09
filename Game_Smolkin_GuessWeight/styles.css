@@ -159,7 +159,7 @@ input[type="checkbox"] {
 
 .animal-card {
   width: min(520px, 90%);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgb(40, 46, 68);
   border-radius: 20px;
   padding: 24px;
   text-align: center;

@@ -53,26 +53,26 @@ export const animals = [
 ];
 
 const initialLeaderboard = [
-  { name: "Алиса", score: 680, difficulty: "Сложный", timed: true },
-  { name: "Марко", score: 640, difficulty: "Сложный", timed: true },
-  { name: "Соня", score: 610, difficulty: "Сложный", timed: false },
-  { name: "Кирилл", score: 590, difficulty: "Сложный", timed: true },
-  { name: "Никита", score: 560, difficulty: "Сложный", timed: false },
-  { name: "Полина", score: 540, difficulty: "Сложный", timed: true },
-  { name: "Артем", score: 520, difficulty: "Сложный", timed: false },
-  { name: "Яна", score: 500, difficulty: "Сложный", timed: true },
-  { name: "Денис", score: 470, difficulty: "Средний", timed: true },
-  { name: "Ева", score: 460, difficulty: "Средний", timed: true },
-  { name: "Олег", score: 445, difficulty: "Средний", timed: false },
-  { name: "Роман", score: 430, difficulty: "Средний", timed: true },
-  { name: "Ирина", score: 420, difficulty: "Средний", timed: false },
-  { name: "Даша", score: 410, difficulty: "Средний", timed: true },
-  { name: "Сергей", score: 395, difficulty: "Средний", timed: false },
-  { name: "Вика", score: 360, difficulty: "Легкий", timed: true },
-  { name: "Глеб", score: 350, difficulty: "Легкий", timed: false },
-  { name: "Лиза", score: 335, difficulty: "Легкий", timed: true },
-  { name: "Максим", score: 320, difficulty: "Легкий", timed: false },
-  { name: "Илья", score: 300, difficulty: "Легкий", timed: false },
+  { name: "Алиса", score: 68, difficulty: "Сложный", timed: true },
+  { name: "Марко", score: 64, difficulty: "Сложный", timed: true },
+  { name: "Соня", score: 61, difficulty: "Сложный", timed: false },
+  { name: "Кирилл", score: 59, difficulty: "Сложный", timed: true },
+  { name: "Никита", score: 56, difficulty: "Сложный", timed: false },
+  { name: "Полина", score: 54, difficulty: "Сложный", timed: true },
+  { name: "Артем", score: 52, difficulty: "Сложный", timed: false },
+  { name: "Яна", score: 50, difficulty: "Сложный", timed: true },
+  { name: "Денис", score: 47, difficulty: "Средний", timed: true },
+  { name: "Ева", score: 46, difficulty: "Средний", timed: true },
+  { name: "Олег", score: 45, difficulty: "Средний", timed: false },
+  { name: "Роман", score: 43, difficulty: "Средний", timed: true },
+  { name: "Ирина", score: 42, difficulty: "Средний", timed: false },
+  { name: "Даша", score: 41, difficulty: "Средний", timed: true },
+  { name: "Сергей", score: 39, difficulty: "Средний", timed: false },
+  { name: "Вика", score: 36, difficulty: "Легкий", timed: true },
+  { name: "Глеб", score: 35, difficulty: "Легкий", timed: false },
+  { name: "Лиза", score: 33, difficulty: "Легкий", timed: true },
+  { name: "Максим", score: 32, difficulty: "Легкий", timed: false },
+  { name: "Илья", score: 30, difficulty: "Легкий", timed: false },
 ];
 
 export function initLeaderboard() {
@@ -107,7 +107,9 @@ export function addLeaderboardEntry(entry) {
 }
 
 export function pickRandomAnimals(excludedIds, count) {
-  const available = animals.filter((animal) => !excludedIds.includes(animal.id));
+  const available = animals.filter(
+    (animal) => !excludedIds.includes(animal.id)
+  );
   const shuffled = [...available];
   for (let index = shuffled.length - 1; index > 0; index -= 1) {
     const swapIndex = Math.floor(Math.random() * (index + 1));

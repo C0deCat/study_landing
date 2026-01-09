@@ -61,7 +61,9 @@ function formatTime(seconds) {
 
 function updateHeader() {
   scoreEl.textContent = state.baseScore;
-  progressEl.textContent = `${state.currentIndex + 1} / ${state.levelAnimals.length}`;
+  progressEl.textContent = `${state.currentIndex + 1} / ${
+    state.levelAnimals.length
+  }`;
   levelBadge.textContent = `Уровень: ${getDifficultySettings().label}`;
   renderAttempts();
   timerBlock.style.display = state.timeMode ? "block" : "none";
@@ -96,6 +98,8 @@ function createAnimalCard(animal) {
 function swapCard(animal) {
   const existing = cardStage.querySelector(".animal-card");
   if (existing) {
+    existing.classList.remove("enter", "enter-active");
+
     existing.classList.add("exit");
     existing.addEventListener(
       "transitionend",
@@ -273,6 +277,7 @@ function moveToNextLevel() {
   state.highestDifficulty = nextDifficulty;
   state.levelAnimals = pickRandomAnimals(state.usedAnimals, 5);
   state.usedAnimals = [...state.usedAnimals, ...state.levelAnimals];
+  state.baseScore = 0;
   state.currentIndex = 0;
   state.completedAnimals = 0;
   state.failedAttemptsCurrent = 0;
