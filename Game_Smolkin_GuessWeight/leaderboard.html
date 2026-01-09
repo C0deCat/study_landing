@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Угадай вес — Рейтинг</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <strong>Угадай вес</strong>
+        <div class="badge">ТОП-20</div>
+      </div>
+      <nav>
+        <a href="menu.html">Главное меню</a>
+        <a href="../index.html">На главную</a>
+      </nav>
+    </header>
+    <main>
+      <section class="panel">
+        <h1>Таблица лидеров</h1>
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Игрок</th>
+              <th>Очки</th>
+              <th>Сложность</th>
+              <th>Таймер</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body"></tbody>
+        </table>
+      </section>
+    </main>
+    <script type="module" src="leaderboard.js"></script>
+  </body>
+</html>

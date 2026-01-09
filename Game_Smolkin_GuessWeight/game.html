@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Угадай вес — Игра</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <strong>Угадай вес</strong>
+        <div class="badge" id="level-badge">Уровень</div>
+      </div>
+      <nav>
+        <a href="menu.html">Главное меню</a>
+        <a href="leaderboard.html">Рейтинг</a>
+      </nav>
+    </header>
+    <main>
+      <section class="panel game-header">
+        <div class="stat">
+          <strong>Игрок:</strong> <span id="player-name"></span>
+        </div>
+        <div class="stat">
+          <strong>Очки:</strong> <span id="current-score">0</span>
+        </div>
+        <div class="stat">
+          <strong>Прогресс:</strong> <span id="progress"></span>
+        </div>
+        <div class="stat">
+          <strong>Попытки:</strong>
+          <div class="attempts" id="attempts-list"></div>
+        </div>
+        <div class="stat" id="timer-block">
+          <strong>Таймер:</strong> <span id="timer-value">--:--</span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="card-stage" id="card-stage"></div>
+        <p class="hint" id="hint-text"></p>
+      </section>
+
+      <section class="panel">
+        <label for="weight-input">Введите вес животного (кг)</label>
+        <input type="number" id="weight-input" min="0" />
+        <div class="menu-actions">
+          <button class="primary" id="submit-weight">Проверить вес</button>
+          <button class="secondary" id="give-up">Выйти в меню</button>
+        </div>
+      </section>
+    </main>
+
+    <div class="overlay hidden" id="overlay">
+      <div class="modal" role="dialog" aria-modal="true">
+        <h2 id="modal-title"></h2>
+        <p id="modal-message"></p>
+        <div class="modal-actions" id="modal-actions"></div>
+      </div>
+    </div>
+
+    <script type="module" src="game.js"></script>
+  </body>
+</html>
