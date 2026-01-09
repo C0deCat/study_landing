@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Угадай вес — игра</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="game-body">
+    <header>
+      <div id="triforce">
+        <div id="triangle" class="shadow">
+          <div id="shadow"></div>
+        </div>
+      </div>
+      <nav aria-label="Основное меню">
+        <a href="../index.html">Главная</a>
+        <details class="nav-dropdown">
+          <summary>Задания</summary>
+          <ul>
+            <li>
+              <a href="../pages/assignment2__cssDrawing.html"
+                >Задание 2. Рисунок CSS</a
+              >
+            </li>
+            <li>
+              <a href="../pages/assignment3__flexBanner.html"
+                >Задание 3. Flexbox-реклама</a
+              >
+            </li>
+            <li>
+              <a href="../pages/assignment4__DOM.html">Задание 4. DOM</a>
+            </li>
+            <li>
+              <a href="../pages/assignment5__puzzle.html">Задание 5. Пазл</a>
+            </li>
+          </ul>
+        </details>
+        <a href="index.html">Курсовая работа</a>
+      </nav>
+    </header>
+    <main class="game-main">
+      <section class="game-card" aria-live="polite">
+        <header class="game-header">
+          <div>
+            <h1>Угадай вес</h1>
+            <p id="gameSubtitle">Подберите вес животного с точностью 10%.</p>
+          </div>
+          <button type="button" class="ghost" id="exitButton">В меню</button>
+        </header>
+        <div class="status-grid">
+          <div class="status-item">
+            <span>Игрок</span>
+            <strong id="playerLabel">—</strong>
+          </div>
+          <div class="status-item">
+            <span>Сложность</span>
+            <strong id="levelLabel">—</strong>
+          </div>
+          <div class="status-item">
+            <span>Животное</span>
+            <strong id="progressLabel">—</strong>
+          </div>
+          <div class="status-item">
+            <span>Попытки</span>
+            <strong id="attemptsLabel">—</strong>
+          </div>
+          <div class="status-item" id="timerBlock">
+            <span>Время</span>
+            <strong id="timerLabel">—</strong>
+          </div>
+          <div class="status-item">
+            <span>Очки (база)</span>
+            <strong id="scoreLabel">0</strong>
+          </div>
+        </div>
+        <div class="animal-stage" id="animalStage"></div>
+        <form class="guess-form" id="guessForm" autocomplete="off">
+          <label class="field">
+            <span>Ваш ответ (кг)</span>
+            <input
+              type="number"
+              step="0.1"
+              min="0"
+              id="weightInput"
+              placeholder="Например, 120"
+              required
+            />
+          </label>
+          <button type="submit" class="primary">Проверить</button>
+        </form>
+        <p class="hint" id="hintText"></p>
+      </section>
+    </main>
+    <div class="modal" id="resultModal" aria-hidden="true">
+      <div class="modal-content" role="dialog" aria-modal="true">
+        <h2 id="modalTitle"></h2>
+        <p id="modalMessage"></p>
+        <div class="modal-actions" id="modalActions"></div>
+      </div>
+    </div>
+    <script type="module" src="scripts/game.js"></script>
+  </body>
+</html>

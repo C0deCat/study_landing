@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Угадай вес — таблица лидеров</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="game-body">
+    <header>
+      <div id="triforce">
+        <div id="triangle" class="shadow">
+          <div id="shadow"></div>
+        </div>
+      </div>
+      <nav aria-label="Основное меню">
+        <a href="../index.html">Главная</a>
+        <details class="nav-dropdown">
+          <summary>Задания</summary>
+          <ul>
+            <li>
+              <a href="../pages/assignment2__cssDrawing.html"
+                >Задание 2. Рисунок CSS</a
+              >
+            </li>
+            <li>
+              <a href="../pages/assignment3__flexBanner.html"
+                >Задание 3. Flexbox-реклама</a
+              >
+            </li>
+            <li>
+              <a href="../pages/assignment4__DOM.html">Задание 4. DOM</a>
+            </li>
+            <li>
+              <a href="../pages/assignment5__puzzle.html">Задание 5. Пазл</a>
+            </li>
+          </ul>
+        </details>
+        <a href="index.html">Курсовая работа</a>
+      </nav>
+    </header>
+    <main class="game-main">
+      <section class="leaderboard-card">
+        <header class="leaderboard-header">
+          <div>
+            <h1>Таблица лидеров</h1>
+            <p>ТОП-20 лучших результатов игры «Угадай вес».</p>
+          </div>
+          <a class="ghost" href="index.html">В меню</a>
+        </header>
+        <ol class="leaderboard-list" id="leaderboardList"></ol>
+      </section>
+    </main>
+    <script type="module" src="scripts/leaderboard.js"></script>
+  </body>
+</html>
