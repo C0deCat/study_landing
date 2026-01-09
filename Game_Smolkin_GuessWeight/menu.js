@@ -11,14 +11,17 @@ const nameInput = document.querySelector("#player-name");
 const nameError = document.querySelector("#name-error");
 const timeToggle = document.querySelector("#timed-toggle");
 const startButton = document.querySelector("#start-game");
+const leaderboardLink = document.querySelector("#leaderboard-link");
 
 initLeaderboard();
 
 let selectedIndex = 0;
+let menuFocusIndex = 0;
 const difficultyButtons = [];
 
 const renderDifficultySettings = () => {
   difficultyContainer.innerHTML = "";
+  difficultyButtons.length = 0;
 
   difficultyOrder.forEach((key, index) => {
     const settings = difficulties[key];
@@ -43,10 +46,16 @@ const renderDifficultySettings = () => {
 
     card.addEventListener("click", () => {
       selectDifficulty(index);
+      setMenuFocus(0);
     });
+    card.addEventListener("focus", () => setMenuFocus(0));
     difficultyButtons.push(card);
     difficultyContainer.appendChild(card);
   });
+  selectDifficulty(selectedIndex);
+  if (menuFocusIndex === 0) {
+    focusCurrentMenuItem();
+  }
 };
 
 renderDifficultySettings();
@@ -58,8 +67,6 @@ function selectDifficulty(index) {
     button.classList.toggle("is-selected", idx === selectedIndex);
   });
 }
-
-selectDifficulty(selectedIndex);
 
 function createInitialState() {
   const difficultyKey = difficultyOrder[selectedIndex];
@@ -94,24 +101,89 @@ function startGame() {
 
 startButton.addEventListener("click", startGame);
 
-window.addEventListener("keydown", (event) => {
-  if (document.activeElement === nameInput) {
-    if (event.key === "Enter") {
-      startGame();
-    }
+function setMenuFocus(index) {
+  menuFocusIndex = Math.max(0, Math.min(index, 4));
+}
+
+function focusCurrentMenuItem() {
+  if (menuFocusIndex === 0) {
+    difficultyButtons[selectedIndex]?.focus();
     return;
   }
-  if (["ArrowRight", "ArrowDown"].includes(event.key)) {
+  if (menuFocusIndex === 1) {
+    timeToggle.focus();
+    return;
+  }
+  if (menuFocusIndex === 2) {
+    nameInput.focus();
+    return;
+  }
+  if (menuFocusIndex === 3) {
+    startButton.focus();
+    return;
+  }
+  leaderboardLink?.focus();
+}
+
+function moveMenuFocus(delta) {
+  setMenuFocus(menuFocusIndex + delta);
+  focusCurrentMenuItem();
+}
+
+nameInput.addEventListener("focus", () => setMenuFocus(2));
+timeToggle.addEventListener("focus", () => setMenuFocus(1));
+startButton.addEventListener("focus", () => setMenuFocus(3));
+leaderboardLink?.addEventListener("focus", () => setMenuFocus(4));
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowDown") {
+    event.preventDefault();
+    moveMenuFocus(1);
+    return;
+  }
+  if (event.key === "ArrowUp") {
+    event.preventDefault();
+    moveMenuFocus(-1);
+    return;
+  }
+  if (event.key === "ArrowRight" && menuFocusIndex === 0) {
     event.preventDefault();
     selectDifficulty((selectedIndex + 1) % difficultyButtons.length);
+    focusCurrentMenuItem();
+    return;
   }
-  if (["ArrowLeft", "ArrowUp"].includes(event.key)) {
+  if (event.key === "ArrowLeft" && menuFocusIndex === 0) {
     event.preventDefault();
     selectDifficulty(
       (selectedIndex - 1 + difficultyButtons.length) % difficultyButtons.length
     );
+    focusCurrentMenuItem();
+    return;
   }
   if (event.key === "Enter") {
-    startGame();
+    event.preventDefault();
+    if (menuFocusIndex === 0) {
+      selectDifficulty((selectedIndex + 1) % difficultyButtons.length);
+      focusCurrentMenuItem();
+      return;
+    }
+    if (menuFocusIndex === 1) {
+      timeToggle.checked = !timeToggle.checked;
+      timeToggle.dispatchEvent(new Event("change"));
+      focusCurrentMenuItem();
+      return;
+    }
+    if (menuFocusIndex === 2) {
+      setMenuFocus(3);
+      focusCurrentMenuItem();
+      return;
+    }
+    if (menuFocusIndex === 3) {
+      startGame();
+      return;
+    }
+    leaderboardLink?.click();
   }
 });
+
+focusCurrentMenuItem();

@@ -28,6 +28,13 @@
 
       <section class="panel">
         <div class="menu-grid" id="difficulty-options"></div>
+        <div class="toggle-row">
+          <label class="switch" for="timed-toggle">
+            <input type="checkbox" id="timed-toggle" />
+            <span class="switch-track"></span>
+            <span class="switch-label">Игра на время</span>
+          </label>
+        </div>
       </section>
 
       <section class="panel">
@@ -39,12 +46,11 @@
           autocomplete="off"
         />
         <p class="error" id="name-error"></p>
-        <label for="timed-toggle">
-          <input type="checkbox" id="timed-toggle" /> Игра на время
-        </label>
         <div class="menu-actions">
           <button class="primary" id="start-game">Начать игру</button>
-          <a class="secondary" href="leaderboard.html">Таблица лидеров</a>
+          <a class="secondary" id="leaderboard-link" href="leaderboard.html"
+            >Таблица лидеров</a
+          >
         </div>
       </section>
     </main>

@@ -322,14 +322,27 @@ function handleSubmit() {
 
 function setupInputHandlers() {
   submitButton.addEventListener("click", handleSubmit);
-  weightInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      handleSubmit();
-    }
-  });
   giveUpButton.addEventListener("click", () => {
     localStorage.removeItem(STORAGE_KEYS.state);
     window.location.href = "menu.html";
+  });
+
+  window.addEventListener("keydown", (event) => {
+    if (!overlay.classList.contains("hidden")) {
+      return;
+    }
+    if (/^\d$/.test(event.key)) {
+      if (document.activeElement !== weightInput) {
+        event.preventDefault();
+        weightInput.focus();
+        weightInput.value += event.key;
+      }
+      return;
+    }
+    if (event.key === "Enter" && document.activeElement === weightInput) {
+      event.preventDefault();
+      handleSubmit();
+    }
   });
 
   window.addEventListener("keydown", (event) => {
