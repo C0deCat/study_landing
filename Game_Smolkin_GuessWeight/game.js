@@ -301,6 +301,7 @@ function saveScore() {
 
 function handleSubmit() {
   const value = Number(weightInput.value);
+  console.log("handleSubmit");
   if (!value || value <= 0) {
     hintText.textContent = "Введите корректное число.";
     return;
@@ -322,23 +323,31 @@ function handleSubmit() {
 
 function setupInputHandlers() {
   submitButton.addEventListener("click", handleSubmit);
-  weightInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      handleSubmit();
-    }
-  });
   giveUpButton.addEventListener("click", () => {
     localStorage.removeItem(STORAGE_KEYS.state);
     window.location.href = "menu.html";
   });
 
   window.addEventListener("keydown", (event) => {
-    if (overlay.classList.contains("hidden")) {
+    if (!overlay.classList.contains("hidden")) {
       return;
     }
-    if (event.key === "Enter") {
+    if (/^\d$/.test(event.key)) {
+      if (document.activeElement !== weightInput) {
+        event.preventDefault();
+        weightInput.focus();
+        weightInput.value += event.key;
+      }
+      return;
+    }
+    if (event.key === "Enter" && document.activeElement === weightInput) {
+      event.preventDefault();
+      console.log("setupInputHandlers_handleSubmit");
+      handleSubmit();
+    } else if (event.key === "Enter" && !overlay.classList.contains("hidden")) {
       const primaryButton = modalActions.querySelector("button");
       if (primaryButton) {
+        console.log("setupInputHandlers_primaryButton");
         primaryButton.click();
       }
     }

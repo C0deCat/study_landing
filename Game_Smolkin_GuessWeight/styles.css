@@ -120,6 +120,65 @@ label {
   margin-bottom: 8px;
 }
 
+label.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.toggle-row {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.switch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.switch-track {
+  width: 52px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
+  position: relative;
+  transition: background 0.2s ease;
+}
+
+.switch-track::after {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f4f4f6;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.2s ease;
+}
+
+.switch input:checked + .switch-track {
+  background: rgba(245, 215, 66, 0.8);
+}
+
+.switch input:checked + .switch-track::after {
+  transform: translateX(24px);
+}
+
+.switch input:focus-visible + .switch-track {
+  outline: 2px solid #f5d742;
+  outline-offset: 3px;
+}
+
+.switch-label {
+  font-weight: 600;
+}
+
 input[type="text"],
 input[type="number"] {
   width: 100%;
@@ -128,11 +187,6 @@ input[type="number"] {
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(15, 18, 24, 0.6);
   color: inherit;
-}
-
-input[type="checkbox"] {
-  transform: scale(1.2);
-  margin-right: 8px;
 }
 
 .game-header {
