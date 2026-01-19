@@ -29,6 +29,26 @@ export const difficulties = {
 
 export const difficultyOrder = ["easy", "medium", "hard"];
 
+export const modes = [
+  { id: "weights", modeName: "Подбор гирьками", modeModifier: 1 },
+  { id: "input", modeName: "Ввод веса", modeModifier: 5 },
+];
+
+export const modeOrder = ["weights", "input"];
+
+export const weights = [
+  { mass: 1000, amount: 1, basisSize: 90 },
+  { mass: 500, amount: 2, basisSize: 84 },
+  { mass: 200, amount: 2, basisSize: 76 },
+  { mass: 100, amount: 2, basisSize: 70 },
+  { mass: 50, amount: 2, basisSize: 62 },
+  { mass: 20, amount: 3, basisSize: 54 },
+  { mass: 10, amount: 3, basisSize: 48 },
+  { mass: 5, amount: 3, basisSize: 42 },
+  { mass: 2, amount: 3, basisSize: 36 },
+  { mass: 1, amount: 3, basisSize: 32 },
+];
+
 export const animals = [
   { id: "lynx", name: "Рысь", weight: 27, color: "#f08a5d" },
   { id: "wolf", name: "Волк", weight: 45, color: "#b83b5e" },

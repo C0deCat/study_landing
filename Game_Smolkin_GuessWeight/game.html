@@ -38,13 +38,36 @@
       </section>
 
       <section class="panel">
-        <div class="card-stage" id="card-stage"></div>
+        <div class="card-stage" id="card-stage">
+          <div class="balance-stage is-hidden" id="balance-stage">
+            <div class="balance-side left">
+              <div class="platform-stack left" id="left-stack">
+                <img class="animal-on-scale" id="animal-on-scale" alt="" />
+                <div class="platform left-platform" id="left-platform"></div>
+              </div>
+            </div>
+            <div class="balance-arrow" id="balance-arrow">
+              <div class="arrow-body"></div>
+              <div class="arrow-head"></div>
+            </div>
+            <div class="balance-side right">
+              <div class="weights-rack" id="weights-rack"></div>
+              <div class="platform-stack right" id="right-stack">
+                <div class="drop-highlight" id="drop-highlight"></div>
+                <div class="platform right-platform" id="right-platform"></div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p class="hint" id="hint-text"></p>
       </section>
 
-      <section class="panel">
-        <label for="weight-input">Введите вес животного (кг)</label>
+      <section class="panel" id="input-panel">
+        <label for="weight-input" id="weight-label"
+          >Введите вес животного (кг)</label
+        >
         <input type="number" id="weight-input" min="0" />
+        <p class="mode-description" id="mode-description"></p>
         <div class="menu-actions game-actions">
           <button class="primary" id="submit-weight">Проверить вес</button>
           <button class="secondary" id="give-up">Выйти в меню</button>
