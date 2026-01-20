@@ -37,16 +37,16 @@ export const modes = [
 export const modeOrder = ["weights", "input"];
 
 export const weights = [
-  { mass: 1000, amount: 1, basisSize: 90 },
-  { mass: 500, amount: 2, basisSize: 84 },
-  { mass: 200, amount: 2, basisSize: 76 },
-  { mass: 100, amount: 2, basisSize: 70 },
-  { mass: 50, amount: 2, basisSize: 62 },
-  { mass: 20, amount: 3, basisSize: 54 },
-  { mass: 10, amount: 3, basisSize: 48 },
-  { mass: 5, amount: 3, basisSize: 42 },
-  { mass: 2, amount: 3, basisSize: 36 },
-  { mass: 1, amount: 3, basisSize: 32 },
+  { mass: 1000, amount: 5, basisSize: 70 },
+  { mass: 500, amount: 5, basisSize: 60 },
+  { mass: 200, amount: 5, basisSize: 50 },
+  { mass: 100, amount: 5, basisSize: 40 },
+  { mass: 50, amount: 5, basisSize: 35 },
+  { mass: 20, amount: 5, basisSize: 30 },
+  { mass: 10, amount: 5, basisSize: 30 },
+  { mass: 5, amount: 5, basisSize: 30 },
+  { mass: 2, amount: 5, basisSize: 30 },
+  { mass: 1, amount: 5, basisSize: 30 },
 ];
 
 export const animals = [
@@ -56,8 +56,8 @@ export const animals = [
   { id: "moose", name: "Лось", weight: 408, color: "#355c7d" },
   { id: "bear", name: "Бурый медведь", weight: 185, color: "#f67280" },
   { id: "boar", name: "Кабан", weight: 79, color: "#c06c84" },
-  { id: "eagle", name: "Орлан", weight: 4.9, color: "#355c7d" },
-  { id: "owl", name: "Сова", weight: 2.7, color: "#99b898" },
+  { id: "eagle", name: "Орлан", weight: 4, color: "#355c7d" },
+  { id: "owl", name: "Сова", weight: 3, color: "#99b898" },
   { id: "seal", name: "Тюлень", weight: 82, color: "#2a363b" },
   { id: "dolphin", name: "Дельфин", weight: 175, color: "#00a8cc" },
   { id: "camel", name: "Верблюд", weight: 475, color: "#f8b400" },
@@ -99,7 +99,7 @@ export function initLeaderboard() {
   if (!localStorage.getItem(STORAGE_KEYS.leaderboard)) {
     localStorage.setItem(
       STORAGE_KEYS.leaderboard,
-      JSON.stringify(initialLeaderboard)
+      JSON.stringify(initialLeaderboard),
     );
   }
 }
@@ -128,7 +128,7 @@ export function addLeaderboardEntry(entry) {
 
 export function pickRandomAnimals(excludedIds, count) {
   const available = animals.filter(
-    (animal) => !excludedIds.includes(animal.id)
+    (animal) => !excludedIds.includes(animal.id),
   );
   const shuffled = [...available];
   for (let index = shuffled.length - 1; index > 0; index -= 1) {
