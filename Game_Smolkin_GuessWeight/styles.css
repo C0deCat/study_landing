@@ -412,6 +412,7 @@ input[type="number"] {
   position: relative;
   display: flex;
   align-items: flex-end;
+  flex-wrap: wrap;
   gap: 8px;
   z-index: 2;
 }
