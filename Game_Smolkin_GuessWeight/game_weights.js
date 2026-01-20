@@ -165,6 +165,17 @@ function updatePlacedWeightPositions() {
   });
 }
 
+function updateDropHighlightBounds() {
+  dropHighlight.style.height = "";
+  const balanceRect = balanceStage.getBoundingClientRect();
+  const highlightRect = dropHighlight.getBoundingClientRect();
+  if (highlightRect.top < balanceRect.top) {
+    const offset = balanceRect.top - highlightRect.top;
+    const newHeight = Math.max(0, highlightRect.height - offset);
+    dropHighlight.style.height = `${newHeight}px`;
+  }
+}
+
 function getColumnState(weightElement) {
   return weightColumns.get(weightElement.dataset.columnId);
 }
@@ -254,6 +265,7 @@ function handleWeightMouseUp(event) {
     updateBalancePositions();
   }
 
+  updateDropHighlightBounds();
   dragState = null;
 }
 
@@ -384,6 +396,7 @@ function resetWeightsToRack() {
   });
   updatePlacedWeightPositions();
   updateBalancePositions();
+  updateDropHighlightBounds();
 }
 
 function startTimer() {
@@ -630,6 +643,8 @@ function initGame() {
   updateWeightModeAnimal(currentAnimal());
   resetWeightsToRack();
   setupInputHandlers();
+  updateDropHighlightBounds();
+  window.addEventListener("resize", updateDropHighlightBounds);
   startTimer();
 }
 
