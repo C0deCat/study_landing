@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Угадай вес — Игра</title>
+    <title>Угадай вес — Ввод веса</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -42,9 +42,12 @@
         <p class="hint" id="hint-text"></p>
       </section>
 
-      <section class="panel">
-        <label for="weight-input">Введите вес животного (кг)</label>
+      <section class="panel" id="input-panel">
+        <label for="weight-input" id="weight-label"
+          >Введите вес животного (кг)</label
+        >
         <input type="number" id="weight-input" min="0" />
+        <p class="mode-description" id="mode-description"></p>
         <div class="menu-actions game-actions">
           <button class="primary" id="submit-weight">Проверить вес</button>
           <button class="secondary" id="give-up">Выйти в меню</button>
@@ -60,6 +63,6 @@
       </div>
     </div>
 
-    <script type="module" src="game.js"></script>
+    <script type="module" src="game_input.js"></script>
   </body>
 </html>
