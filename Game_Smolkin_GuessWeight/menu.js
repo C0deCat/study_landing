@@ -141,7 +141,8 @@ function startGame() {
   nameError.textContent = "";
   const state = createInitialState();
   localStorage.setItem(STORAGE_KEYS.state, JSON.stringify(state));
-  window.location.href = "game.html";
+  window.location.href =
+    state.mode === "weights" ? "game_weights.html" : "game_input.html";
 }
 
 startButton.addEventListener("click", startGame);

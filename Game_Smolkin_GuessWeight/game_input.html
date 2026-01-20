@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Угадай вес — Игра</title>
+    <title>Угадай вес — Ввод веса</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -38,27 +38,7 @@
       </section>
 
       <section class="panel">
-        <div class="card-stage" id="card-stage">
-          <div class="balance-stage is-hidden" id="balance-stage">
-            <div class="balance-side left">
-              <div class="platform-stack left" id="left-stack">
-                <img class="animal-on-scale" id="animal-on-scale" alt="" />
-                <div class="platform left-platform" id="left-platform"></div>
-              </div>
-            </div>
-            <div class="balance-arrow" id="balance-arrow">
-              <div class="arrow-head"></div>
-              <div class="arrow-body"></div>
-            </div>
-            <div class="weights-rack" id="weights-rack"></div>
-            <div class="balance-side right">
-              <div class="platform-stack right" id="right-stack">
-                <div class="drop-highlight" id="drop-highlight"></div>
-                <div class="platform right-platform" id="right-platform"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="card-stage" id="card-stage"></div>
         <p class="hint" id="hint-text"></p>
       </section>
 
@@ -83,6 +63,6 @@
       </div>
     </div>
 
-    <script type="module" src="game.js"></script>
+    <script type="module" src="game_input.js"></script>
   </body>
 </html>

@@ -358,7 +358,7 @@ input[type="number"] {
   left: 0;
   bottom: calc(var(--platform-height) + 12px);
   width: 100%;
-  height: 300px;
+  height: min(300px, calc(100% - var(--platform-height) - 24px));
   border-radius: 14px;
   border: 2px dashed rgba(76, 207, 108, 0.75);
   background: rgba(76, 207, 108, 0.15);
@@ -377,7 +377,8 @@ input[type="number"] {
   top: 50%;
   width: 120px;
   height: 120px;
-  transform: translate(-50%, -50%) rotate(var(--arrow-rotation, -90deg));
+  transform: translate(-50%, -100%) rotate(var(--arrow-rotation, -90deg));
+  transform-origin: 50% 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -401,12 +402,17 @@ input[type="number"] {
   margin-top: -6px;
 }
 
+.weights-area {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
 .weights-rack {
-  position: absolute;
-  top: 0;
-  right: 0;
+  position: relative;
   display: flex;
   align-items: flex-end;
+  flex-wrap: wrap;
   gap: 8px;
   z-index: 2;
 }
