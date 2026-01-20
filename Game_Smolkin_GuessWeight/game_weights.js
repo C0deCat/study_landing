@@ -41,6 +41,7 @@ let timeRemaining = null;
 let dragState = null;
 let weightElements = [];
 const weightOrigins = new Map();
+const weightColumns = new Map();
 
 document.body.classList.add("mode-weights");
 
@@ -164,22 +165,55 @@ function updatePlacedWeightPositions() {
   });
 }
 
+function getColumnState(weightElement) {
+  return weightColumns.get(weightElement.dataset.columnId);
+}
+
+function isTopWeightInColumn(weightElement) {
+  const columnState = getColumnState(weightElement);
+  if (!columnState) {
+    return false;
+  }
+  return columnState.weights[columnState.weights.length - 1] === weightElement;
+}
+
+function updateColumnPositions(columnState) {
+  columnState.weights.forEach((element, index) => {
+    const offset = index * columnState.shift;
+    element.style.left = `${offset}px`;
+    element.style.bottom = `${offset}px`;
+  });
+}
+
 function resetWeightToOrigin(weightElement) {
   const origin = weightOrigins.get(weightElement);
   if (!origin) {
+    return;
+  }
+  const columnState = getColumnState(weightElement);
+  if (!columnState) {
     return;
   }
   origin.parent.appendChild(weightElement);
   weightElement.dataset.onScale = "false";
   weightElement.classList.remove("is-dragging");
   weightElement.style.position = "absolute";
-  weightElement.style.left = origin.left;
-  weightElement.style.bottom = origin.bottom;
   weightElement.style.top = "auto";
   weightElement.style.zIndex = "";
+  if (!columnState.weights.includes(weightElement)) {
+    columnState.weights.push(weightElement);
+  }
+  updateColumnPositions(columnState);
 }
 
 function placeWeightOnScale(weightElement) {
+  const columnState = getColumnState(weightElement);
+  if (columnState) {
+    columnState.weights = columnState.weights.filter(
+      (element) => element !== weightElement
+    );
+    updateColumnPositions(columnState);
+  }
   rightStack.appendChild(weightElement);
   weightElement.dataset.onScale = "true";
   weightElement.classList.remove("is-dragging");
@@ -228,6 +262,9 @@ function handleWeightMouseDown(event) {
     return;
   }
   const weightElement = event.currentTarget;
+  if (weightElement.dataset.onScale !== "true" && !isTopWeightInColumn(weightElement)) {
+    return;
+  }
   event.preventDefault();
   const rect = weightElement.getBoundingClientRect();
   dragState = {
@@ -257,6 +294,12 @@ function handleWeightDoubleClick(event) {
   }
   const weightElement = event.currentTarget;
   if (weightElement.dataset.onScale === "true") {
+    resetWeightToOrigin(weightElement);
+    updatePlacedWeightPositions();
+    updateBalancePositions();
+    return;
+  }
+  if (!isTopWeightInColumn(weightElement)) {
     return;
   }
   placeWeightOnScale(weightElement);
@@ -266,6 +309,7 @@ function renderWeightsRack() {
   weightsRack.innerHTML = "";
   weightElements = [];
   weightOrigins.clear();
+  weightColumns.clear();
 
   const sortedWeights = [...weights].sort((a, b) => b.mass - a.mass);
 
@@ -285,6 +329,14 @@ function renderWeightsRack() {
     column.style.width = `${columnWidth}px`;
     column.style.height = `${columnHeight}px`;
 
+    const columnId = String(weightIndex);
+    const columnState = {
+      element: column,
+      weights: [],
+      shift,
+    };
+    weightColumns.set(columnId, columnState);
+
     for (let index = 0; index < weight.amount; index += 1) {
       const weightBlock = document.createElement("div");
       weightBlock.className = "weight-block";
@@ -300,22 +352,21 @@ function renderWeightsRack() {
       );
 
       const offset = index * shift;
-      weightBlock.style.left = `${offset}px`;
-      weightBlock.style.bottom = `${offset}px`;
       weightBlock.dataset.mass = weight.mass;
       weightBlock.dataset.onScale = "false";
+      weightBlock.dataset.columnId = columnId;
       weightBlock.addEventListener("mousedown", handleWeightMouseDown);
       weightBlock.addEventListener("dblclick", handleWeightDoubleClick);
 
       weightElements.push(weightBlock);
       weightOrigins.set(weightBlock, {
         parent: column,
-        left: weightBlock.style.left,
-        bottom: weightBlock.style.bottom,
       });
+      columnState.weights.push(weightBlock);
       column.appendChild(weightBlock);
     }
 
+    updateColumnPositions(columnState);
     weightsRack.appendChild(column);
   });
 }
@@ -326,7 +377,11 @@ function updateWeightModeAnimal(animal) {
 }
 
 function resetWeightsToRack() {
-  weightElements.forEach((weightElement) => resetWeightToOrigin(weightElement));
+  weightElements.forEach((weightElement) => {
+    if (weightElement.dataset.onScale === "true") {
+      resetWeightToOrigin(weightElement);
+    }
+  });
   updatePlacedWeightPositions();
   updateBalancePositions();
 }
