@@ -51,13 +51,13 @@ main {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding: 32px 8vw 60px;
+  padding: 16px 8vw 30px;
 }
 
 .panel {
   background: rgba(18, 22, 32, 0.92);
-  border-radius: 18px;
-  padding: 24px;
+  border-radius: 12px;
+  padding: 16px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
 }
 
@@ -80,7 +80,10 @@ main {
   color: inherit;
   text-align: left;
   cursor: pointer;
-  transition: transform 0.2s ease, border 0.2s ease, background 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    border 0.2s ease,
+    background 0.2s ease;
 
   &:hover {
     transform: translateY(-3px);
@@ -238,7 +241,9 @@ input[type="number"] {
   flex-direction: column;
   gap: 16px;
   position: absolute;
-  transition: transform 0.5s ease, opacity 0.5s ease;
+  transition:
+    transform 0.5s ease,
+    opacity 0.5s ease;
 
   &.enter {
     transform: translateX(120%);
@@ -288,13 +293,13 @@ input[type="number"] {
 }
 
 .balance-stage {
-  --platform-width: 180px;
+  --platform-width: 90%;
   --platform-height: 18px;
   position: relative;
   width: 100%;
   min-height: 420px;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
@@ -336,7 +341,6 @@ input[type="number"] {
   left: 0;
   width: 100%;
   height: var(--platform-height);
-  border-radius: 999px;
   background: linear-gradient(180deg, #f5d742, #caa32b);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
@@ -345,7 +349,7 @@ input[type="number"] {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: calc(var(--platform-height) + 12px);
+  bottom: calc(var(--platform-height));
   width: min(160px, 90%);
   border-radius: 16px;
 }
@@ -380,13 +384,13 @@ input[type="number"] {
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  z-index: 1;
 }
 
 .arrow-body {
   width: 12px;
-  height: 70px;
+  height: 100px;
   background: #f4f4f6;
-  border-radius: 999px;
 }
 
 .arrow-head {
@@ -406,6 +410,7 @@ input[type="number"] {
   display: flex;
   align-items: flex-end;
   gap: 8px;
+  z-index: 2;
 }
 
 .weight-column {
@@ -427,7 +432,9 @@ input[type="number"] {
   cursor: grab;
   user-select: none;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .weight-block::before {
@@ -465,6 +472,8 @@ input[type="number"] {
 .hint {
   min-height: 24px;
   color: #ffd166;
+  margin-top: 10px;
+  margin-bottom: 0px;
 }
 
 .attempts {
