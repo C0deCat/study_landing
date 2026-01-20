@@ -349,7 +349,7 @@ input[type="number"] {
   left: 50%;
   transform: translateX(-50%);
   bottom: calc(var(--platform-height));
-  width: min(160px, 90%);
+  width: min(360px, 90%);
   border-radius: 16px;
 }
 
