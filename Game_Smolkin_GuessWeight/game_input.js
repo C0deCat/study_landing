@@ -3,7 +3,6 @@ import {
   difficulties,
   difficultyOrder,
   modes,
-  weights,
   animals,
   addLeaderboardEntry,
   pickRandomAnimals,
@@ -16,13 +15,6 @@ const attemptsList = document.querySelector("#attempts-list");
 const timerBlock = document.querySelector("#timer-block");
 const timerValue = document.querySelector("#timer-value");
 const cardStage = document.querySelector("#card-stage");
-const balanceStage = document.querySelector("#balance-stage");
-const weightsRack = document.querySelector("#weights-rack");
-const dropHighlight = document.querySelector("#drop-highlight");
-const leftStack = document.querySelector("#left-stack");
-const rightStack = document.querySelector("#right-stack");
-const balanceArrow = document.querySelector("#balance-arrow");
-const animalOnScale = document.querySelector("#animal-on-scale");
 const modeDescription = document.querySelector("#mode-description");
 const hintText = document.querySelector("#hint-text");
 const weightInput = document.querySelector("#weight-input");
@@ -39,9 +31,6 @@ const animalsById = new Map(animals.map((animal) => [animal.id, animal]));
 let state = loadState();
 let timerId = null;
 let timeRemaining = null;
-let dragState = null;
-let weightElements = [];
-const weightOrigins = new Map();
 
 if (!state) {
   window.location.href = "menu.html";
@@ -51,7 +40,13 @@ if (state && !state.mode) {
   state.mode = "input";
 }
 
-playerNameEl.textContent = state.playerName;
+if (state?.mode === "weights") {
+  window.location.href = "game_weights.html";
+}
+
+if (state) {
+  playerNameEl.textContent = state.playerName;
+}
 
 function loadState() {
   try {
@@ -64,10 +59,6 @@ function loadState() {
 
 function saveState() {
   localStorage.setItem(STORAGE_KEYS.state, JSON.stringify(state));
-}
-
-function isWeightsMode() {
-  return state.mode === "weights";
 }
 
 function getModeSettings() {
@@ -92,21 +83,6 @@ function updateHeader() {
   levelBadge.textContent = `Уровень: ${getDifficultySettings().label}`;
   renderAttempts();
   timerBlock.style.display = state.timeMode ? "block" : "none";
-}
-
-function updateModeLayout() {
-  const weightsMode = isWeightsMode();
-  document.body.classList.toggle("mode-weights", weightsMode);
-  balanceStage.classList.toggle("is-hidden", !weightsMode);
-  weightInput.disabled = weightsMode;
-
-  if (weightsMode) {
-    modeDescription.textContent =
-      "Перетащите гири на правую платформу и нажмите «Проверить вес».";
-  } else {
-    modeDescription.textContent =
-      "Введите предполагаемый вес животного и нажмите «Проверить вес».";
-  }
 }
 
 function renderAttempts() {
@@ -190,215 +166,6 @@ function swapCard(animal) {
   });
 }
 
-function getCorrectedBasis(basisSize) {
-  return Math.min(basisSize, window.innerWidth * 0.1);
-}
-
-function getAllWeights() {
-  return weightElements.reduce(
-    (sum, element) =>
-      sum + (element.dataset.onScale === "true" ? Number(element.dataset.mass) : 0),
-    0
-  );
-}
-
-function updateBalancePositions() {
-  if (!isWeightsMode()) {
-    return;
-  }
-  const animal = currentAnimal();
-  if (!animal) {
-    return;
-  }
-  const animalWeight = animal.weight;
-  const allWeights = getAllWeights();
-  const totalWeight = animalWeight + allWeights;
-  const L = 50;
-  let leftOffset = 0;
-  let rightOffset = 0;
-  let deg = 0;
-
-  if (totalWeight > 0) {
-    leftOffset = L * (allWeights / totalWeight);
-    rightOffset = L * (animalWeight / totalWeight);
-    deg = 90 * ((allWeights - animalWeight) / totalWeight);
-  }
-
-  leftStack.style.setProperty("--left-offset", `${leftOffset}%`);
-  rightStack.style.setProperty("--right-offset", `${rightOffset}%`);
-  balanceArrow.style.setProperty("--arrow-rotation", `${deg}deg`);
-}
-
-function updatePlacedWeightPositions() {
-  const placed = weightElements.filter(
-    (element) => element.dataset.onScale === "true"
-  );
-  const platformHeight =
-    parseFloat(
-      getComputedStyle(balanceStage).getPropertyValue("--platform-height")
-    ) || 18;
-  const platformWidth = rightStack.getBoundingClientRect().width;
-  placed.forEach((element, index) => {
-    const elementWidth = element.getBoundingClientRect().width;
-    const offset = index * 14;
-    const left = Math.min(offset, platformWidth - elementWidth - 4);
-    element.style.left = `${Math.max(0, left)}px`;
-    element.style.bottom = `${platformHeight + 8 + index * 6}px`;
-  });
-}
-
-function resetWeightToOrigin(weightElement) {
-  const origin = weightOrigins.get(weightElement);
-  if (!origin) {
-    return;
-  }
-  origin.parent.appendChild(weightElement);
-  weightElement.dataset.onScale = "false";
-  weightElement.classList.remove("is-dragging");
-  weightElement.style.position = "absolute";
-  weightElement.style.left = origin.left;
-  weightElement.style.bottom = origin.bottom;
-  weightElement.style.top = "auto";
-  weightElement.style.zIndex = "";
-}
-
-function placeWeightOnScale(weightElement) {
-  rightStack.appendChild(weightElement);
-  weightElement.dataset.onScale = "true";
-  weightElement.classList.remove("is-dragging");
-  weightElement.style.position = "absolute";
-  weightElement.style.top = "auto";
-  weightElement.style.zIndex = "2";
-  updatePlacedWeightPositions();
-  updateBalancePositions();
-}
-
-function handleWeightMouseMove(event) {
-  if (!dragState) {
-    return;
-  }
-  dragState.element.style.left = `${event.clientX - dragState.offsetX}px`;
-  dragState.element.style.top = `${event.clientY - dragState.offsetY}px`;
-}
-
-function handleWeightMouseUp(event) {
-  if (!dragState) {
-    return;
-  }
-  document.removeEventListener("mousemove", handleWeightMouseMove);
-  document.removeEventListener("mouseup", handleWeightMouseUp);
-  dropHighlight.classList.remove("is-active");
-
-  const dropRect = dropHighlight.getBoundingClientRect();
-  const isInside =
-    event.clientX >= dropRect.left &&
-    event.clientX <= dropRect.right &&
-    event.clientY >= dropRect.top &&
-    event.clientY <= dropRect.bottom;
-
-  if (isInside) {
-    placeWeightOnScale(dragState.element);
-  } else {
-    resetWeightToOrigin(dragState.element);
-    updateBalancePositions();
-  }
-
-  dragState = null;
-}
-
-function handleWeightMouseDown(event) {
-  if (!isWeightsMode() || event.button !== 0) {
-    return;
-  }
-  const weightElement = event.currentTarget;
-  event.preventDefault();
-  const rect = weightElement.getBoundingClientRect();
-  dragState = {
-    element: weightElement,
-    offsetX: event.clientX - rect.left,
-    offsetY: event.clientY - rect.top,
-  };
-
-  weightElement.classList.add("is-dragging");
-  weightElement.style.position = "fixed";
-  weightElement.style.left = `${rect.left}px`;
-  weightElement.style.top = `${rect.top}px`;
-  weightElement.style.bottom = "auto";
-  weightElement.style.zIndex = "1000";
-  dropHighlight.classList.add("is-active");
-
-  document.addEventListener("mousemove", handleWeightMouseMove);
-  document.addEventListener("mouseup", handleWeightMouseUp);
-}
-
-function renderWeightsRack() {
-  weightsRack.innerHTML = "";
-  weightElements = [];
-  weightOrigins.clear();
-
-  const sortedWeights = [...weights].sort((a, b) => b.mass - a.mass);
-
-  sortedWeights.forEach((weight, weightIndex) => {
-    const column = document.createElement("div");
-    column.className = "weight-column";
-
-    const correctedBasis = getCorrectedBasis(weight.basisSize);
-    const width = correctedBasis;
-    const height = correctedBasis * 1.5;
-    const headWidth = correctedBasis * 0.5;
-    const headHeight = correctedBasis * 0.25;
-    const shift = 0.2 * weight.basisSize;
-    const columnWidth = width + (weight.amount - 1) * shift;
-    const columnHeight = height + (weight.amount - 1) * shift + headHeight;
-
-    column.style.width = `${columnWidth}px`;
-    column.style.height = `${columnHeight}px`;
-
-    for (let index = 0; index < weight.amount; index += 1) {
-      const weightBlock = document.createElement("div");
-      weightBlock.className = "weight-block";
-      weightBlock.textContent = weight.mass;
-      weightBlock.style.setProperty("--weight-width", `${width}px`);
-      weightBlock.style.setProperty("--weight-height", `${height}px`);
-      weightBlock.style.setProperty("--weight-head-width", `${headWidth}px`);
-      weightBlock.style.setProperty("--weight-head-height", `${headHeight}px`);
-      const hue = 210 - weightIndex * 12;
-      weightBlock.style.setProperty(
-        "--weight-color",
-        `hsl(${hue} 45% 45%)`
-      );
-
-      const offset = index * shift;
-      weightBlock.style.left = `${offset}px`;
-      weightBlock.style.bottom = `${offset}px`;
-      weightBlock.dataset.mass = weight.mass;
-      weightBlock.dataset.onScale = "false";
-      weightBlock.addEventListener("mousedown", handleWeightMouseDown);
-
-      weightElements.push(weightBlock);
-      weightOrigins.set(weightBlock, {
-        parent: column,
-        left: weightBlock.style.left,
-        bottom: weightBlock.style.bottom,
-      });
-      column.appendChild(weightBlock);
-    }
-
-    weightsRack.appendChild(column);
-  });
-}
-
-function updateWeightModeAnimal(animal) {
-  animalOnScale.src = `./assets/${animal.id}.jpg`;
-  animalOnScale.alt = `Фото: ${animal.name}`;
-}
-
-function resetWeightsToRack() {
-  weightElements.forEach((weightElement) => resetWeightToOrigin(weightElement));
-  updatePlacedWeightPositions();
-  updateBalancePositions();
-}
-
 function startTimer() {
   clearTimer();
   if (!state.timeMode) {
@@ -456,12 +223,7 @@ function handleCorrectGuess(animal) {
   hintText.textContent = `Верно! Вес ${animal.name} ≈ ${animal.weight} кг.`;
   updateHeader();
   saveState();
-  if (isWeightsMode()) {
-    resetWeightsToRack();
-    updateWeightModeAnimal(currentAnimal());
-  } else {
-    swapCard(currentAnimal());
-  }
+  swapCard(currentAnimal());
   startTimer();
 }
 
@@ -573,12 +335,7 @@ function moveToNextLevel() {
   hintText.textContent = "Новый уровень!";
   updateHeader();
   saveState();
-  if (isWeightsMode()) {
-    resetWeightsToRack();
-    updateWeightModeAnimal(currentAnimal());
-  } else {
-    swapCard(currentAnimal());
-  }
+  swapCard(currentAnimal());
   startTimer();
 }
 
@@ -593,14 +350,6 @@ function saveScore() {
 }
 
 function getGuessValue() {
-  if (isWeightsMode()) {
-    const allWeights = getAllWeights();
-    if (allWeights <= 0) {
-      hintText.textContent = "Добавьте гири на платформу справа.";
-      return null;
-    }
-    return allWeights;
-  }
   const value = Number(weightInput.value);
   if (!value || value <= 0) {
     hintText.textContent = "Введите корректное число.";
@@ -619,9 +368,7 @@ function handleSubmit() {
     return;
   }
   clearTimer();
-  if (!isWeightsMode()) {
-    weightInput.value = "";
-  }
+  weightInput.value = "";
   const tolerance = animal.weight * 0.1;
   const isCorrect = Math.abs(animal.weight - value) <= tolerance;
   if (isCorrect) {
@@ -642,7 +389,7 @@ function setupInputHandlers() {
     if (!overlay.classList.contains("hidden")) {
       return;
     }
-    if (/^\d$/.test(event.key) && !isWeightsMode()) {
+    if (/^\d$/.test(event.key)) {
       if (document.activeElement !== weightInput) {
         event.preventDefault();
         weightInput.focus();
@@ -650,10 +397,7 @@ function setupInputHandlers() {
       }
       return;
     }
-    if (event.key === "Enter" && isWeightsMode()) {
-      event.preventDefault();
-      handleSubmit();
-    } else if (event.key === "Enter" && document.activeElement === weightInput) {
+    if (event.key === "Enter" && document.activeElement === weightInput) {
       event.preventDefault();
       handleSubmit();
     } else if (event.key === "Enter" && !overlay.classList.contains("hidden")) {
@@ -666,15 +410,10 @@ function setupInputHandlers() {
 }
 
 function initGame() {
-  updateModeLayout();
   updateHeader();
-  if (isWeightsMode()) {
-    renderWeightsRack();
-    updateWeightModeAnimal(currentAnimal());
-    resetWeightsToRack();
-  } else {
-    swapCard(currentAnimal());
-  }
+  modeDescription.textContent =
+    "Введите предполагаемый вес животного и нажмите «Проверить вес».";
+  swapCard(currentAnimal());
   setupInputHandlers();
   startTimer();
 }
