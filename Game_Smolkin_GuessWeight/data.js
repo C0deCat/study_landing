@@ -31,7 +31,7 @@ export const difficultyOrder = ["easy", "medium", "hard"];
 
 export const modes = [
   { id: "weights", modeName: "Подбор гирьками", modeModifier: 1 },
-  { id: "animals", modeName: "Сравнение животных", modeModifier: 7 },
+  { id: "animals", modeName: "Сравнение животных", modeModifier: 3 },
   { id: "input", modeName: "Ввод веса", modeModifier: 5 },
 ];
 
@@ -181,7 +181,9 @@ function pickFromPool(poolIds, excludedIds, count) {
 }
 
 export function pickRandomAnimals(excludedIds, count) {
-  const available = animals.filter((animal) => !excludedIds.includes(animal.id));
+  const available = animals.filter(
+    (animal) => !excludedIds.includes(animal.id),
+  );
   let isExhausted = false;
   let selected = shuffleList(available).slice(0, count);
   if (selected.length < count) {
