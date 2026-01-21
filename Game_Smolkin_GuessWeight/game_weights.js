@@ -34,10 +34,12 @@ const modalActions = document.querySelector("#modal-actions");
 const levelBadge = document.querySelector("#level-badge");
 
 const animalsById = new Map(animals.map((animal) => [animal.id, animal]));
+const gravity = 1800;
 let dragState = null;
 let weightElements = [];
 const weightOrigins = new Map();
 const weightColumns = new Map();
+const fallingWeights = new Map();
 
 document.body.classList.add("mode-weights");
 
@@ -65,6 +67,14 @@ function getAllWeights() {
     (sum, element) =>
       sum + (element.dataset.onScale === "true" ? Number(element.dataset.mass) : 0),
     0
+  );
+}
+
+function getPlatformHeight() {
+  return (
+    parseFloat(
+      getComputedStyle(balanceStage).getPropertyValue("--platform-height")
+    ) || 18
   );
 }
 
@@ -96,17 +106,20 @@ function updatePlacedWeightPositions() {
   const placed = weightElements.filter(
     (element) => element.dataset.onScale === "true"
   );
-  const platformHeight =
-    parseFloat(
-      getComputedStyle(balanceStage).getPropertyValue("--platform-height")
-    ) || 18;
+  const platformHeight = getPlatformHeight();
   const platformWidth = rightStack.getBoundingClientRect().width;
-  placed.forEach((element, index) => {
+  placed.forEach((element) => {
+    if (fallingWeights.has(element)) {
+      return;
+    }
     const elementWidth = element.getBoundingClientRect().width;
-    const offset = index * 14;
-    const left = Math.min(offset, platformWidth - elementWidth - 4);
+    const storedLeft = Number(element.dataset.dropLeft ?? 0);
+    const left = Math.min(
+      Math.max(0, storedLeft),
+      platformWidth - elementWidth - 4
+    );
     element.style.left = `${Math.max(0, left)}px`;
-    element.style.bottom = `${platformHeight + 8 + index * 6}px`;
+    element.style.bottom = `${platformHeight}px`;
   });
 }
 
@@ -141,6 +154,43 @@ function updateColumnPositions(columnState) {
   });
 }
 
+function stopWeightFall(weightElement) {
+  const fallState = fallingWeights.get(weightElement);
+  if (!fallState) {
+    return;
+  }
+  cancelAnimationFrame(fallState.frameId);
+  fallingWeights.delete(weightElement);
+}
+
+function startWeightFall(weightElement) {
+  stopWeightFall(weightElement);
+  const platformHeight = getPlatformHeight();
+  let velocity = 0;
+  let lastTime = performance.now();
+
+  const step = (time) => {
+    const delta = (time - lastTime) / 1000;
+    lastTime = time;
+    velocity += gravity * delta;
+    const currentBottom = parseFloat(weightElement.style.bottom) || 0;
+    const nextBottom = currentBottom - velocity * delta;
+
+    if (nextBottom <= platformHeight) {
+      weightElement.style.bottom = `${platformHeight}px`;
+      fallingWeights.delete(weightElement);
+      return;
+    }
+
+    weightElement.style.bottom = `${nextBottom}px`;
+    const frameId = requestAnimationFrame(step);
+    fallingWeights.set(weightElement, { frameId });
+  };
+
+  const frameId = requestAnimationFrame(step);
+  fallingWeights.set(weightElement, { frameId });
+}
+
 function resetWeightToOrigin(weightElement) {
   const origin = weightOrigins.get(weightElement);
   if (!origin) {
@@ -150,8 +200,10 @@ function resetWeightToOrigin(weightElement) {
   if (!columnState) {
     return;
   }
+  stopWeightFall(weightElement);
   origin.parent.appendChild(weightElement);
   weightElement.dataset.onScale = "false";
+  delete weightElement.dataset.dropLeft;
   weightElement.classList.remove("is-dragging");
   weightElement.style.position = "absolute";
   weightElement.style.top = "auto";
@@ -162,7 +214,7 @@ function resetWeightToOrigin(weightElement) {
   updateColumnPositions(columnState);
 }
 
-function placeWeightOnScale(weightElement) {
+function placeWeightOnScale(weightElement, { dropX, offsetX = 0 } = {}) {
   const columnState = getColumnState(weightElement);
   if (columnState) {
     columnState.weights = columnState.weights.filter(
@@ -170,13 +222,28 @@ function placeWeightOnScale(weightElement) {
     );
     updateColumnPositions(columnState);
   }
+  const weightRect = weightElement.getBoundingClientRect();
+  const stackRect = rightStack.getBoundingClientRect();
+  const elementWidth = weightRect.width;
+  const maxLeft = stackRect.width - elementWidth - 4;
+  const computedLeft =
+    dropX === undefined || dropX === null
+      ? (stackRect.width - elementWidth) / 2
+      : dropX - stackRect.left - offsetX;
+  const clampedLeft = Math.min(Math.max(0, computedLeft), maxLeft);
+  const platformHeight = getPlatformHeight();
+  const startBottom = Math.max(platformHeight, stackRect.bottom - weightRect.bottom);
+
   rightStack.appendChild(weightElement);
   weightElement.dataset.onScale = "true";
+  weightElement.dataset.dropLeft = `${clampedLeft}`;
   weightElement.classList.remove("is-dragging");
   weightElement.style.position = "absolute";
   weightElement.style.top = "auto";
   weightElement.style.zIndex = "2";
-  updatePlacedWeightPositions();
+  weightElement.style.left = `${Math.max(0, clampedLeft)}px`;
+  weightElement.style.bottom = `${startBottom}px`;
+  startWeightFall(weightElement);
   updateBalancePositions();
 }
 
@@ -204,7 +271,10 @@ function handleWeightMouseUp(event) {
     event.clientY <= dropRect.bottom;
 
   if (isInside) {
-    placeWeightOnScale(dragState.element);
+    placeWeightOnScale(dragState.element, {
+      dropX: event.clientX,
+      offsetX: dragState.offsetX,
+    });
   } else {
     resetWeightToOrigin(dragState.element);
     updateBalancePositions();
@@ -224,6 +294,7 @@ function handleWeightMouseDown(event) {
   }
   event.preventDefault();
   const rect = weightElement.getBoundingClientRect();
+  stopWeightFall(weightElement);
   dragState = {
     element: weightElement,
     offsetX: event.clientX - rect.left,
@@ -410,7 +481,10 @@ function initGame() {
   game.init();
   setupInputHandlers();
   updateDropHighlightBounds();
-  window.addEventListener("resize", updateDropHighlightBounds);
+  window.addEventListener("resize", () => {
+    updateDropHighlightBounds();
+    updatePlacedWeightPositions();
+  });
 }
 
 initGame();
