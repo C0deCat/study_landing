@@ -3,9 +3,9 @@ import {
   difficulties,
   difficultyOrder,
   modes,
-  weights,
   animals,
   addLeaderboardEntry,
+  buildAnimalComparisonLevel,
   pickRandomAnimals,
 } from "./data.js";
 import { createGameCore } from "./games.js";
@@ -40,8 +40,9 @@ let weightElements = [];
 const weightOrigins = new Map();
 const weightColumns = new Map();
 const fallingWeights = new Map();
+let weightAnimalKey = "";
 
-document.body.classList.add("mode-weights");
+document.body.classList.add("mode-animals");
 
 const elements = {
   playerNameEl,
@@ -65,15 +66,16 @@ function getCorrectedBasis(basisSize) {
 function getAllWeights() {
   return weightElements.reduce(
     (sum, element) =>
-      sum + (element.dataset.onScale === "true" ? Number(element.dataset.mass) : 0),
-    0
+      sum +
+      (element.dataset.onScale === "true" ? Number(element.dataset.mass) : 0),
+    0,
   );
 }
 
 function getPlatformHeight() {
   return (
     parseFloat(
-      getComputedStyle(balanceStage).getPropertyValue("--platform-height")
+      getComputedStyle(balanceStage).getPropertyValue("--platform-height"),
     ) || 18
   );
 }
@@ -104,7 +106,7 @@ function updateBalancePositions() {
 
 function updatePlacedWeightPositions() {
   const placed = weightElements.filter(
-    (element) => element.dataset.onScale === "true"
+    (element) => element.dataset.onScale === "true",
   );
   const platformHeight = getPlatformHeight();
   const platformWidth = rightStack.getBoundingClientRect().width;
@@ -116,7 +118,7 @@ function updatePlacedWeightPositions() {
     const storedLeft = Number(element.dataset.dropLeft ?? 0);
     const left = Math.min(
       Math.max(0, storedLeft),
-      platformWidth - elementWidth - 4
+      platformWidth - elementWidth - 4,
     );
     element.style.left = `${Math.max(0, left)}px`;
     element.style.bottom = `${platformHeight}px`;
@@ -218,7 +220,7 @@ function placeWeightOnScale(weightElement, { dropX, offsetX = 0 } = {}) {
   const columnState = getColumnState(weightElement);
   if (columnState) {
     columnState.weights = columnState.weights.filter(
-      (element) => element !== weightElement
+      (element) => element !== weightElement,
     );
     updateColumnPositions(columnState);
   }
@@ -232,7 +234,10 @@ function placeWeightOnScale(weightElement, { dropX, offsetX = 0 } = {}) {
       : dropX - stackRect.left - offsetX;
   const clampedLeft = Math.min(Math.max(0, computedLeft), maxLeft);
   const platformHeight = getPlatformHeight();
-  const startBottom = Math.max(platformHeight, stackRect.bottom - weightRect.bottom);
+  const startBottom = Math.max(
+    platformHeight,
+    stackRect.bottom - weightRect.bottom,
+  );
 
   rightStack.appendChild(weightElement);
   weightElement.dataset.onScale = "true";
@@ -289,7 +294,10 @@ function handleWeightMouseDown(event) {
     return;
   }
   const weightElement = event.currentTarget;
-  if (weightElement.dataset.onScale !== "true" && !isTopWeightInColumn(weightElement)) {
+  if (
+    weightElement.dataset.onScale !== "true" &&
+    !isTopWeightInColumn(weightElement)
+  ) {
     return;
   }
   event.preventDefault();
@@ -333,31 +341,32 @@ function handleWeightDoubleClick(event) {
   placeWeightOnScale(weightElement);
 }
 
-function renderWeightsRack() {
+function renderAnimalsRack(weightAnimalIds) {
   weightsRack.innerHTML = "";
   weightElements = [];
   weightOrigins.clear();
   weightColumns.clear();
 
-  const sortedWeights = [...weights].sort((a, b) => b.mass - a.mass);
+  const basis = getCorrectedBasis(80);
+  const width = basis;
+  const height = basis;
+  const shift = 0.2 * basis;
 
-  sortedWeights.forEach((weight, weightIndex) => {
+  weightAnimalIds.forEach((animalId, animalIndex) => {
+    const animal = animalsById.get(animalId);
+    if (!animal) {
+      return;
+    }
     const column = document.createElement("div");
     column.className = "weight-column";
 
-    const correctedBasis = getCorrectedBasis(weight.basisSize);
-    const width = correctedBasis;
-    const height = correctedBasis * 1.5;
-    const headWidth = correctedBasis * 0.5;
-    const headHeight = correctedBasis * 0.25;
-    const shift = 0.2 * weight.basisSize;
-    const columnWidth = width + (weight.amount - 1) * shift;
-    const columnHeight = height + (weight.amount - 1) * shift + headHeight;
+    const columnWidth = width + 4 * shift;
+    const columnHeight = height + 4 * shift;
 
     column.style.width = `${columnWidth}px`;
     column.style.height = `${columnHeight}px`;
 
-    const columnId = String(weightIndex);
+    const columnId = String(animalIndex);
     const columnState = {
       element: column,
       weights: [],
@@ -365,22 +374,21 @@ function renderWeightsRack() {
     };
     weightColumns.set(columnId, columnState);
 
-    for (let index = 0; index < weight.amount; index += 1) {
+    for (let index = 0; index < 5; index += 1) {
       const weightBlock = document.createElement("div");
-      weightBlock.className = "weight-block";
-      weightBlock.textContent = weight.mass;
+      weightBlock.className = "weight-block animal-block";
+      weightBlock.title = animal.name;
       weightBlock.style.setProperty("--weight-width", `${width}px`);
       weightBlock.style.setProperty("--weight-height", `${height}px`);
-      weightBlock.style.setProperty("--weight-head-width", `${headWidth}px`);
-      weightBlock.style.setProperty("--weight-head-height", `${headHeight}px`);
-      const hue = 210 - weightIndex * 12;
+      weightBlock.style.setProperty("--weight-head-width", "0px");
+      weightBlock.style.setProperty("--weight-head-height", "0px");
       weightBlock.style.setProperty(
-        "--weight-color",
-        `hsl(${hue} 45% 45%)`
+        "--animal-image",
+        `url(./assets/${animal.id}.jpg)`,
       );
+      weightBlock.style.setProperty("--animal-color", animal.color);
 
-      const offset = index * shift;
-      weightBlock.dataset.mass = weight.mass;
+      weightBlock.dataset.mass = animal.weight;
       weightBlock.dataset.onScale = "false";
       weightBlock.dataset.columnId = columnId;
       weightBlock.addEventListener("mousedown", handleWeightMouseDown);
@@ -415,32 +423,45 @@ function resetWeightsToRack() {
   updateDropHighlightBounds();
 }
 
+function ensureWeightAnimalsRendered() {
+  const state = game.getState();
+  const weightAnimals = state?.weightAnimals ?? [];
+  const nextKey = weightAnimals.join("|");
+  if (!weightAnimals.length || nextKey === weightAnimalKey) {
+    return;
+  }
+  weightAnimalKey = nextKey;
+  renderAnimalsRack(weightAnimals);
+}
+
 const game = createGameCore({
-  expectedMode: "weights",
+  expectedMode: "animals",
   elements,
   animalsById,
   modes,
   difficulties,
   difficultyOrder,
   pickRandomAnimals,
+  pickLevelAnimals: (state) => buildAnimalComparisonLevel(state.usedAnimals),
   addLeaderboardEntry,
   onModeMismatch: () => {
     const state = game.getState();
-    if (state?.mode === "animals") {
-      window.location.href = "game_animals.html";
+    if (state?.mode === "weights") {
+      window.location.href = "game_weights.html";
       return;
     }
     window.location.href = "game_input.html";
   },
   onRoundStart: (animal) => {
+    ensureWeightAnimalsRendered();
     resetWeightsToRack();
     updateWeightModeAnimal(animal);
   },
   getGuessValue,
   onInit: () => {
     modeDescription.textContent =
-      "Перетащите гири на правую платформу и нажмите «Проверить вес».";
-    renderWeightsRack();
+      "Перетащите животных на правую платформу и нажмите «Проверить вес».";
+    ensureWeightAnimalsRendered();
     updateDropHighlightBounds();
   },
 });
@@ -453,7 +474,7 @@ function currentAnimal() {
 function getGuessValue() {
   const allWeights = getAllWeights();
   if (allWeights <= 0) {
-    hintText.textContent = "Добавьте гири на платформу справа.";
+    hintText.textContent = "Добавьте животных на платформу справа.";
     return null;
   }
   return allWeights;
