@@ -66,15 +66,16 @@ function getCorrectedBasis(basisSize) {
 function getAllWeights() {
   return weightElements.reduce(
     (sum, element) =>
-      sum + (element.dataset.onScale === "true" ? Number(element.dataset.mass) : 0),
-    0
+      sum +
+      (element.dataset.onScale === "true" ? Number(element.dataset.mass) : 0),
+    0,
   );
 }
 
 function getPlatformHeight() {
   return (
     parseFloat(
-      getComputedStyle(balanceStage).getPropertyValue("--platform-height")
+      getComputedStyle(balanceStage).getPropertyValue("--platform-height"),
     ) || 18
   );
 }
@@ -105,7 +106,7 @@ function updateBalancePositions() {
 
 function updatePlacedWeightPositions() {
   const placed = weightElements.filter(
-    (element) => element.dataset.onScale === "true"
+    (element) => element.dataset.onScale === "true",
   );
   const platformHeight = getPlatformHeight();
   const platformWidth = rightStack.getBoundingClientRect().width;
@@ -117,7 +118,7 @@ function updatePlacedWeightPositions() {
     const storedLeft = Number(element.dataset.dropLeft ?? 0);
     const left = Math.min(
       Math.max(0, storedLeft),
-      platformWidth - elementWidth - 4
+      platformWidth - elementWidth - 4,
     );
     element.style.left = `${Math.max(0, left)}px`;
     element.style.bottom = `${platformHeight}px`;
@@ -219,7 +220,7 @@ function placeWeightOnScale(weightElement, { dropX, offsetX = 0 } = {}) {
   const columnState = getColumnState(weightElement);
   if (columnState) {
     columnState.weights = columnState.weights.filter(
-      (element) => element !== weightElement
+      (element) => element !== weightElement,
     );
     updateColumnPositions(columnState);
   }
@@ -233,7 +234,10 @@ function placeWeightOnScale(weightElement, { dropX, offsetX = 0 } = {}) {
       : dropX - stackRect.left - offsetX;
   const clampedLeft = Math.min(Math.max(0, computedLeft), maxLeft);
   const platformHeight = getPlatformHeight();
-  const startBottom = Math.max(platformHeight, stackRect.bottom - weightRect.bottom);
+  const startBottom = Math.max(
+    platformHeight,
+    stackRect.bottom - weightRect.bottom,
+  );
 
   rightStack.appendChild(weightElement);
   weightElement.dataset.onScale = "true";
@@ -290,7 +294,10 @@ function handleWeightMouseDown(event) {
     return;
   }
   const weightElement = event.currentTarget;
-  if (weightElement.dataset.onScale !== "true" && !isTopWeightInColumn(weightElement)) {
+  if (
+    weightElement.dataset.onScale !== "true" &&
+    !isTopWeightInColumn(weightElement)
+  ) {
     return;
   }
   event.preventDefault();
@@ -340,7 +347,7 @@ function renderAnimalsRack(weightAnimalIds) {
   weightOrigins.clear();
   weightColumns.clear();
 
-  const basis = getCorrectedBasis(64);
+  const basis = getCorrectedBasis(80);
   const width = basis;
   const height = basis;
   const shift = 0.2 * basis;
@@ -377,7 +384,7 @@ function renderAnimalsRack(weightAnimalIds) {
       weightBlock.style.setProperty("--weight-head-height", "0px");
       weightBlock.style.setProperty(
         "--animal-image",
-        `url(./assets/${animal.id}.jpg)`
+        `url(./assets/${animal.id}.jpg)`,
       );
       weightBlock.style.setProperty("--animal-color", animal.color);
 
