@@ -460,6 +460,20 @@ input[type="number"] {
   z-index: 5;
 }
 
+.animal-block {
+  background-color: var(--animal-color, #4d6a90);
+  background-image: var(--animal-image);
+  background-size: cover;
+  background-position: center;
+  color: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  text-shadow: none;
+}
+
+.animal-block::before {
+  display: none;
+}
+
 .mode-description {
   margin-top: 12px;
   color: rgba(255, 255, 255, 0.7);

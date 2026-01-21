@@ -8,6 +8,7 @@ export function createGameCore({
   difficulties,
   difficultyOrder,
   pickRandomAnimals,
+  pickLevelAnimals,
   addLeaderboardEntry,
   onModeMismatch,
   onRoundStart,
@@ -240,8 +241,24 @@ export function createGameCore({
     }
     state.difficulty = nextDifficulty;
     state.highestDifficulty = nextDifficulty;
-    state.levelAnimals = pickRandomAnimals(state.usedAnimals, 5);
-    state.usedAnimals = [...state.usedAnimals, ...state.levelAnimals];
+    if (pickLevelAnimals) {
+      const nextLevel = pickLevelAnimals(state);
+      state.levelAnimals = nextLevel.levelAnimals;
+      state.usedAnimals = nextLevel.usedAnimals;
+      if (nextLevel.weightAnimals) {
+        state.weightAnimals = nextLevel.weightAnimals;
+      }
+    } else {
+      const { ids: levelAnimals, isExhausted } = pickRandomAnimals(
+        state.usedAnimals,
+        5,
+      );
+      if (isExhausted) {
+        state.usedAnimals = state.usedAnimals.slice(5);
+      }
+      state.levelAnimals = levelAnimals;
+      state.usedAnimals = [...state.usedAnimals, ...state.levelAnimals];
+    }
     state.baseScore = 0;
     state.currentIndex = 0;
     state.completedAnimals = 0;

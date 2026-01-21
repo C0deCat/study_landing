@@ -5,6 +5,7 @@ import {
   modes,
   modeOrder,
   initLeaderboard,
+  buildAnimalComparisonLevel,
   pickRandomAnimals,
 } from "./data.js";
 
@@ -114,7 +115,7 @@ function selectDifficulty(index) {
 
 function createInitialState() {
   const difficultyKey = difficultyOrder[selectedIndex];
-  const levelAnimals = pickRandomAnimals([], 5);
+  const { ids: levelAnimals } = pickRandomAnimals([], 5);
   return {
     playerName: nameInput.value.trim(),
     mode: modeOrder[selectedModeIndex],
@@ -131,6 +132,27 @@ function createInitialState() {
   };
 }
 
+function createAnimalComparisonState() {
+  const difficultyKey = difficultyOrder[selectedIndex];
+  const { levelAnimals, usedAnimals, weightAnimals } =
+    buildAnimalComparisonLevel([]);
+  return {
+    playerName: nameInput.value.trim(),
+    mode: "animals",
+    difficulty: difficultyKey,
+    timeMode: timeToggle.checked,
+    highestDifficulty: difficultyKey,
+    baseScore: 0,
+    usedAnimals,
+    levelAnimals,
+    weightAnimals,
+    currentIndex: 0,
+    attemptsLeft: difficulties[difficultyKey].attempts,
+    failedAttemptsCurrent: 0,
+    completedAnimals: 0,
+  };
+}
+
 function startGame() {
   const trimmedName = nameInput.value.trim();
   if (!trimmedName) {
@@ -139,10 +161,18 @@ function startGame() {
     return;
   }
   nameError.textContent = "";
-  const state = createInitialState();
+  const selectedMode = modeOrder[selectedModeIndex];
+  const state =
+    selectedMode === "animals"
+      ? createAnimalComparisonState()
+      : createInitialState();
   localStorage.setItem(STORAGE_KEYS.state, JSON.stringify(state));
   window.location.href =
-    state.mode === "weights" ? "game_weights.html" : "game_input.html";
+    state.mode === "weights"
+      ? "game_weights.html"
+      : state.mode === "animals"
+        ? "game_animals.html"
+        : "game_input.html";
 }
 
 startButton.addEventListener("click", startGame);

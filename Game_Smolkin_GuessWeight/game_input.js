@@ -131,6 +131,11 @@ const game = createGameCore({
   pickRandomAnimals,
   addLeaderboardEntry,
   onModeMismatch: () => {
+    const state = game.getState();
+    if (state?.mode === "animals") {
+      window.location.href = "game_animals.html";
+      return;
+    }
     window.location.href = "game_weights.html";
   },
   onRoundStart: (animal) => {
