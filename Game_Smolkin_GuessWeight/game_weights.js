@@ -65,15 +65,16 @@ function getCorrectedBasis(basisSize) {
 function getAllWeights() {
   return weightElements.reduce(
     (sum, element) =>
-      sum + (element.dataset.onScale === "true" ? Number(element.dataset.mass) : 0),
-    0
+      sum +
+      (element.dataset.onScale === "true" ? Number(element.dataset.mass) : 0),
+    0,
   );
 }
 
 function getPlatformHeight() {
   return (
     parseFloat(
-      getComputedStyle(balanceStage).getPropertyValue("--platform-height")
+      getComputedStyle(balanceStage).getPropertyValue("--platform-height"),
     ) || 18
   );
 }
@@ -104,7 +105,7 @@ function updateBalancePositions() {
 
 function updatePlacedWeightPositions() {
   const placed = weightElements.filter(
-    (element) => element.dataset.onScale === "true"
+    (element) => element.dataset.onScale === "true",
   );
   const platformHeight = getPlatformHeight();
   const platformWidth = rightStack.getBoundingClientRect().width;
@@ -116,7 +117,7 @@ function updatePlacedWeightPositions() {
     const storedLeft = Number(element.dataset.dropLeft ?? 0);
     const left = Math.min(
       Math.max(0, storedLeft),
-      platformWidth - elementWidth - 4
+      platformWidth - elementWidth - 4,
     );
     element.style.left = `${Math.max(0, left)}px`;
     element.style.bottom = `${platformHeight}px`;
@@ -218,7 +219,7 @@ function placeWeightOnScale(weightElement, { dropX, offsetX = 0 } = {}) {
   const columnState = getColumnState(weightElement);
   if (columnState) {
     columnState.weights = columnState.weights.filter(
-      (element) => element !== weightElement
+      (element) => element !== weightElement,
     );
     updateColumnPositions(columnState);
   }
@@ -232,7 +233,10 @@ function placeWeightOnScale(weightElement, { dropX, offsetX = 0 } = {}) {
       : dropX - stackRect.left - offsetX;
   const clampedLeft = Math.min(Math.max(0, computedLeft), maxLeft);
   const platformHeight = getPlatformHeight();
-  const startBottom = Math.max(platformHeight, stackRect.bottom - weightRect.bottom);
+  const startBottom = Math.max(
+    platformHeight,
+    stackRect.bottom - weightRect.bottom,
+  );
 
   rightStack.appendChild(weightElement);
   weightElement.dataset.onScale = "true";
@@ -251,6 +255,20 @@ function handleWeightMouseMove(event) {
   if (!dragState) {
     return;
   }
+
+  const isAlreadyDragging = dragState.element.classList.contains("is-dragging");
+  if (!isAlreadyDragging) {
+    const weightElement = dragState.element;
+    const rect = weightElement.getBoundingClientRect();
+    weightElement.classList.add("is-dragging");
+    weightElement.style.position = "fixed";
+    weightElement.style.left = `${rect.left}px`;
+    weightElement.style.top = `${rect.top}px`;
+    weightElement.style.bottom = "auto";
+    weightElement.style.zIndex = "1000";
+    dropHighlight.classList.add("is-active");
+  }
+
   dragState.element.style.left = `${event.clientX - dragState.offsetX}px`;
   dragState.element.style.top = `${event.clientY - dragState.offsetY}px`;
 }
@@ -289,7 +307,10 @@ function handleWeightMouseDown(event) {
     return;
   }
   const weightElement = event.currentTarget;
-  if (weightElement.dataset.onScale !== "true" && !isTopWeightInColumn(weightElement)) {
+  if (
+    weightElement.dataset.onScale !== "true" &&
+    !isTopWeightInColumn(weightElement)
+  ) {
     return;
   }
   event.preventDefault();
@@ -300,14 +321,6 @@ function handleWeightMouseDown(event) {
     offsetX: event.clientX - rect.left,
     offsetY: event.clientY - rect.top,
   };
-
-  weightElement.classList.add("is-dragging");
-  weightElement.style.position = "fixed";
-  weightElement.style.left = `${rect.left}px`;
-  weightElement.style.top = `${rect.top}px`;
-  weightElement.style.bottom = "auto";
-  weightElement.style.zIndex = "1000";
-  dropHighlight.classList.add("is-active");
 
   document.addEventListener("mousemove", handleWeightMouseMove);
   document.addEventListener("mouseup", handleWeightMouseUp);
@@ -374,10 +387,7 @@ function renderWeightsRack() {
       weightBlock.style.setProperty("--weight-head-width", `${headWidth}px`);
       weightBlock.style.setProperty("--weight-head-height", `${headHeight}px`);
       const hue = 210 - weightIndex * 12;
-      weightBlock.style.setProperty(
-        "--weight-color",
-        `hsl(${hue} 45% 45%)`
-      );
+      weightBlock.style.setProperty("--weight-color", `hsl(${hue} 45% 45%)`);
 
       const offset = index * shift;
       weightBlock.dataset.mass = weight.mass;
