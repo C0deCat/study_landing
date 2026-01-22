@@ -299,6 +299,7 @@ function handleWeightMouseUp(event) {
       now - lastClick.time <= doubleClickDelay
     ) {
       toggleWeightPlacement(dragState.element);
+      updateDropHighlightBounds();
       lastClick = { element: null, time: 0 };
     } else {
       lastClick = { element: dragState.element, time: now };

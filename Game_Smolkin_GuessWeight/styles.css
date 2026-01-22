@@ -417,6 +417,16 @@ input[type="number"] {
   z-index: 2;
 }
 
+.mode-animals .weights-area {
+  min-height: 250px;
+}
+
+.mode-animals .weights-rack {
+  display: block;
+  width: 100%;
+  min-height: 250px;
+}
+
 .weight-column {
   position: relative;
   display: block;

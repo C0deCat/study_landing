@@ -149,16 +149,20 @@ function getColumnState(weightElement) {
 function isTopWeightInColumn(weightElement) {
   const columnState = getColumnState(weightElement);
   if (!columnState) {
-    return false;
+    return true;
   }
   return columnState.weights[columnState.weights.length - 1] === weightElement;
 }
 
 function updateColumnPositions(columnState) {
-  columnState.weights.forEach((element, index) => {
-    const offset = index * columnState.shift;
-    element.style.left = `${offset}px`;
-    element.style.bottom = `${offset}px`;
+  columnState.weights.forEach((element) => {
+    const origin = weightOrigins.get(element);
+    if (!origin) {
+      return;
+    }
+    element.style.left = `${origin.left}px`;
+    element.style.top = `${origin.top}px`;
+    element.style.bottom = "auto";
   });
 }
 
@@ -199,27 +203,74 @@ function startWeightFall(weightElement) {
   fallingWeights.set(weightElement, { frameId });
 }
 
+function getRandomRackPosition(weightElement) {
+  const rackRect = weightsRack.getBoundingClientRect();
+  const weightRect = weightElement.getBoundingClientRect();
+  const maxX = Math.max(0, rackRect.width - weightRect.width);
+  const maxY = Math.max(0, rackRect.height - weightRect.height);
+  return {
+    left: Math.random() * maxX,
+    top: Math.random() * maxY,
+  };
+}
+
+function setWeightRackOrigin(weightElement, { left, top }) {
+  weightOrigins.set(weightElement, {
+    parent: weightsRack,
+    left,
+    top,
+  });
+  weightElement.style.position = "absolute";
+  weightElement.style.left = `${left}px`;
+  weightElement.style.top = `${top}px`;
+  weightElement.style.bottom = "auto";
+}
+
+function moveWeightToRackPosition(
+  weightElement,
+  { clientX, clientY, offsetX = 0, offsetY = 0 },
+) {
+  const rackRect = weightsRack.getBoundingClientRect();
+  const weightRect = weightElement.getBoundingClientRect();
+  const maxX = Math.max(0, rackRect.width - weightRect.width);
+  const maxY = Math.max(0, rackRect.height - weightRect.height);
+  const left = Math.min(Math.max(0, clientX - rackRect.left - offsetX), maxX);
+  const top = Math.min(Math.max(0, clientY - rackRect.top - offsetY), maxY);
+  const columnState = getColumnState(weightElement);
+  stopWeightFall(weightElement);
+  weightsRack.appendChild(weightElement);
+  weightElement.dataset.onScale = "false";
+  delete weightElement.dataset.dropLeft;
+  weightElement.classList.remove("is-dragging");
+  weightElement.style.zIndex = "";
+  if (columnState) {
+    columnState.weights = [weightElement];
+  }
+  setWeightRackOrigin(weightElement, { left, top });
+  if (columnState) {
+    updateColumnPositions(columnState);
+  }
+}
+
 function resetWeightToOrigin(weightElement) {
   const origin = weightOrigins.get(weightElement);
   if (!origin) {
     return;
   }
   const columnState = getColumnState(weightElement);
-  if (!columnState) {
-    return;
-  }
   stopWeightFall(weightElement);
   origin.parent.appendChild(weightElement);
   weightElement.dataset.onScale = "false";
   delete weightElement.dataset.dropLeft;
   weightElement.classList.remove("is-dragging");
   weightElement.style.position = "absolute";
-  weightElement.style.top = "auto";
   weightElement.style.zIndex = "";
-  if (!columnState.weights.includes(weightElement)) {
+  if (columnState && !columnState.weights.includes(weightElement)) {
     columnState.weights.push(weightElement);
   }
-  updateColumnPositions(columnState);
+  if (columnState) {
+    updateColumnPositions(columnState);
+  }
 }
 
 function placeWeightOnScale(weightElement, { dropX, offsetX = 0 } = {}) {
@@ -300,6 +351,8 @@ function handleWeightMouseUp(event) {
       now - lastClick.time <= doubleClickDelay
     ) {
       toggleWeightPlacement(dragState.element);
+      updateBalancePositions();
+      updateDropHighlightBounds();
       lastClick = { element: null, time: 0 };
     } else {
       lastClick = { element: dragState.element, time: now };
@@ -321,7 +374,12 @@ function handleWeightMouseUp(event) {
       offsetX: dragState.offsetX,
     });
   } else {
-    resetWeightToOrigin(dragState.element);
+    moveWeightToRackPosition(dragState.element, {
+      clientX: event.clientX,
+      clientY: event.clientY,
+      offsetX: dragState.offsetX,
+      offsetY: dragState.offsetY,
+    });
     updateBalancePositions();
   }
 
@@ -378,31 +436,20 @@ function renderAnimalsRack(weightAnimalIds) {
   const basis = getCorrectedBasis(80);
   const width = basis;
   const height = basis;
-  const shift = 0.2 * basis;
 
   weightAnimalIds.forEach((animalId, animalIndex) => {
     const animal = animalsById.get(animalId);
     if (!animal) {
       return;
     }
-    const column = document.createElement("div");
-    column.className = "weight-column";
-
-    const columnWidth = width + 4 * shift;
-    const columnHeight = height + 4 * shift;
-
-    column.style.width = `${columnWidth}px`;
-    column.style.height = `${columnHeight}px`;
-
-    const columnId = String(animalIndex);
-    const columnState = {
-      element: column,
-      weights: [],
-      shift,
-    };
-    weightColumns.set(columnId, columnState);
 
     for (let index = 0; index < 5; index += 1) {
+      const columnId = `${animalIndex}-${index}`;
+      const columnState = {
+        element: weightsRack,
+        weights: [],
+        shift: 0,
+      };
       const weightBlock = document.createElement("div");
       weightBlock.className = "weight-block animal-block";
       weightBlock.title = animal.name;
@@ -422,15 +469,17 @@ function renderAnimalsRack(weightAnimalIds) {
       weightBlock.addEventListener("mousedown", handleWeightMouseDown);
 
       weightElements.push(weightBlock);
-      weightOrigins.set(weightBlock, {
-        parent: column,
-      });
       columnState.weights.push(weightBlock);
-      column.appendChild(weightBlock);
+      weightColumns.set(columnId, columnState);
+      weightsRack.appendChild(weightBlock);
     }
+  });
 
-    updateColumnPositions(columnState);
-    weightsRack.appendChild(column);
+  requestAnimationFrame(() => {
+    weightElements.forEach((weightElement) => {
+      const position = getRandomRackPosition(weightElement);
+      setWeightRackOrigin(weightElement, position);
+    });
   });
 }
 
