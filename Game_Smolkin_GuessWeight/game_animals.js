@@ -256,6 +256,20 @@ function handleWeightMouseMove(event) {
   if (!dragState) {
     return;
   }
+
+  const isAlreadyDragging = dragState.element.classList.contains("is-dragging");
+  if (!isAlreadyDragging) {
+    const weightElement = dragState.element;
+    const rect = weightElement.getBoundingClientRect();
+    weightElement.classList.add("is-dragging");
+    weightElement.style.position = "fixed";
+    weightElement.style.left = `${rect.left}px`;
+    weightElement.style.top = `${rect.top}px`;
+    weightElement.style.bottom = "auto";
+    weightElement.style.zIndex = "1000";
+    dropHighlight.classList.add("is-active");
+  }
+
   dragState.element.style.left = `${event.clientX - dragState.offsetX}px`;
   dragState.element.style.top = `${event.clientY - dragState.offsetY}px`;
 }
@@ -308,14 +322,6 @@ function handleWeightMouseDown(event) {
     offsetX: event.clientX - rect.left,
     offsetY: event.clientY - rect.top,
   };
-
-  weightElement.classList.add("is-dragging");
-  weightElement.style.position = "fixed";
-  weightElement.style.left = `${rect.left}px`;
-  weightElement.style.top = `${rect.top}px`;
-  weightElement.style.bottom = "auto";
-  weightElement.style.zIndex = "1000";
-  dropHighlight.classList.add("is-active");
 
   document.addEventListener("mousemove", handleWeightMouseMove);
   document.addEventListener("mouseup", handleWeightMouseUp);
