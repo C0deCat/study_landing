@@ -226,8 +226,16 @@ function setWeightRackOrigin(weightElement, { left, top }) {
   weightElement.style.bottom = "auto";
 }
 
-function moveWeightToRandomRackPosition(weightElement) {
-  const position = getRandomRackPosition(weightElement);
+function moveWeightToRackPosition(
+  weightElement,
+  { clientX, clientY, offsetX = 0, offsetY = 0 },
+) {
+  const rackRect = weightsRack.getBoundingClientRect();
+  const weightRect = weightElement.getBoundingClientRect();
+  const maxX = Math.max(0, rackRect.width - weightRect.width);
+  const maxY = Math.max(0, rackRect.height - weightRect.height);
+  const left = Math.min(Math.max(0, clientX - rackRect.left - offsetX), maxX);
+  const top = Math.min(Math.max(0, clientY - rackRect.top - offsetY), maxY);
   const columnState = getColumnState(weightElement);
   stopWeightFall(weightElement);
   weightsRack.appendChild(weightElement);
@@ -238,7 +246,7 @@ function moveWeightToRandomRackPosition(weightElement) {
   if (columnState) {
     columnState.weights = [weightElement];
   }
-  setWeightRackOrigin(weightElement, position);
+  setWeightRackOrigin(weightElement, { left, top });
   if (columnState) {
     updateColumnPositions(columnState);
   }
@@ -342,7 +350,7 @@ function handleWeightMouseUp(event) {
       lastClick.element === dragState.element &&
       now - lastClick.time <= doubleClickDelay
     ) {
-      moveWeightToRandomRackPosition(dragState.element);
+      toggleWeightPlacement(dragState.element);
       updateBalancePositions();
       updateDropHighlightBounds();
       lastClick = { element: null, time: 0 };
@@ -366,7 +374,12 @@ function handleWeightMouseUp(event) {
       offsetX: dragState.offsetX,
     });
   } else {
-    resetWeightToOrigin(dragState.element);
+    moveWeightToRackPosition(dragState.element, {
+      clientX: event.clientX,
+      clientY: event.clientY,
+      offsetX: dragState.offsetX,
+      offsetY: dragState.offsetY,
+    });
     updateBalancePositions();
   }
 
