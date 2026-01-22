@@ -35,11 +35,17 @@ const levelBadge = document.querySelector("#level-badge");
 
 const animalsById = new Map(animals.map((animal) => [animal.id, animal]));
 const gravity = 1800;
+const dragThreshold = 4;
+const doubleClickDelay = 300;
 let dragState = null;
 let weightElements = [];
 const weightOrigins = new Map();
 const weightColumns = new Map();
 const fallingWeights = new Map();
+let lastClick = {
+  element: null,
+  time: 0,
+};
 let weightAnimalKey = "";
 
 document.body.classList.add("mode-animals");
@@ -257,8 +263,13 @@ function handleWeightMouseMove(event) {
     return;
   }
 
-  const isAlreadyDragging = dragState.element.classList.contains("is-dragging");
-  if (!isAlreadyDragging) {
+  if (!dragState.hasMoved) {
+    const deltaX = event.clientX - dragState.startX;
+    const deltaY = event.clientY - dragState.startY;
+    if (Math.hypot(deltaX, deltaY) < dragThreshold) {
+      return;
+    }
+    dragState.hasMoved = true;
     const weightElement = dragState.element;
     const rect = weightElement.getBoundingClientRect();
     weightElement.classList.add("is-dragging");
@@ -281,6 +292,21 @@ function handleWeightMouseUp(event) {
   document.removeEventListener("mousemove", handleWeightMouseMove);
   document.removeEventListener("mouseup", handleWeightMouseUp);
   dropHighlight.classList.remove("is-active");
+
+  if (!dragState.hasMoved) {
+    const now = performance.now();
+    if (
+      lastClick.element === dragState.element &&
+      now - lastClick.time <= doubleClickDelay
+    ) {
+      toggleWeightPlacement(dragState.element);
+      lastClick = { element: null, time: 0 };
+    } else {
+      lastClick = { element: dragState.element, time: now };
+    }
+    dragState = null;
+    return;
+  }
 
   const dropRect = dropHighlight.getBoundingClientRect();
   const isInside =
@@ -321,20 +347,16 @@ function handleWeightMouseDown(event) {
     element: weightElement,
     offsetX: event.clientX - rect.left,
     offsetY: event.clientY - rect.top,
+    startX: event.clientX,
+    startY: event.clientY,
+    hasMoved: false,
   };
 
   document.addEventListener("mousemove", handleWeightMouseMove);
   document.addEventListener("mouseup", handleWeightMouseUp);
 }
 
-function handleWeightDoubleClick(event) {
-  if (dragState) {
-    return;
-  }
-  if (event.button !== 0) {
-    return;
-  }
-  const weightElement = event.currentTarget;
+function toggleWeightPlacement(weightElement) {
   if (weightElement.dataset.onScale === "true") {
     resetWeightToOrigin(weightElement);
     updatePlacedWeightPositions();
@@ -398,7 +420,6 @@ function renderAnimalsRack(weightAnimalIds) {
       weightBlock.dataset.onScale = "false";
       weightBlock.dataset.columnId = columnId;
       weightBlock.addEventListener("mousedown", handleWeightMouseDown);
-      weightBlock.addEventListener("dblclick", handleWeightDoubleClick);
 
       weightElements.push(weightBlock);
       weightOrigins.set(weightBlock, {
