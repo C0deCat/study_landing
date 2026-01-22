@@ -406,14 +406,13 @@ input[type="number"] {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 16px;
+  min-height: 250px;
 }
 
 .weights-rack {
   position: relative;
-  display: flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  gap: 8px;
+  width: 100%;
+  min-height: 250px;
   z-index: 2;
 }
 
