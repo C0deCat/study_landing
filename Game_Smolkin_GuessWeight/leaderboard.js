@@ -1,4 +1,4 @@
-import { getLeaderboard, initLeaderboard } from "./data.js";
+const { getLeaderboard, initLeaderboard } = window.GameData;
 
 const tableBody = document.querySelector("#leaderboard-body");
 

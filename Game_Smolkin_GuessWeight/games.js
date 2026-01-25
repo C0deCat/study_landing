@@ -1,6 +1,11 @@
-import { STORAGE_KEYS } from "./data.js";
+(() => {
+  if (window.createGameCore) {
+    return;
+  }
 
-export function createGameCore({
+  const { STORAGE_KEYS } = window.GameData;
+
+  function createGameCore({
   expectedMode,
   elements,
   animalsById,
@@ -310,11 +315,14 @@ export function createGameCore({
     startTimer();
   }
 
-  return {
-    init,
-    handleSubmit,
-    getState: () => state,
-    currentAnimal,
-    updateHeader,
-  };
-}
+    return {
+      init,
+      handleSubmit,
+      getState: () => state,
+      currentAnimal,
+      updateHeader,
+    };
+  }
+
+  window.createGameCore = createGameCore;
+})();
