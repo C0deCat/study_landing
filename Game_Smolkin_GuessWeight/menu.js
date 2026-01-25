@@ -1,4 +1,4 @@
-import {
+const {
   STORAGE_KEYS,
   difficulties,
   difficultyOrder,
@@ -7,7 +7,7 @@ import {
   initLeaderboard,
   buildAnimalComparisonLevel,
   pickRandomAnimals,
-} from "./data.js";
+} = window.GameData;
 
 const modeContainer = document.querySelector("#mode-options");
 const difficultyContainer = document.querySelector("#difficulty-options");

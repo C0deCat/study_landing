@@ -1,4 +1,4 @@
-import {
+const {
   STORAGE_KEYS,
   difficulties,
   difficultyOrder,
@@ -6,8 +6,8 @@ import {
   animals,
   addLeaderboardEntry,
   pickRandomAnimals,
-} from "./data.js";
-import { createGameCore } from "./games.js";
+} = window.GameData;
+const { createGameCore } = window;
 
 const playerNameEl = document.querySelector("#player-name");
 const scoreEl = document.querySelector("#current-score");

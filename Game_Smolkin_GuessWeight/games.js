@@ -1,6 +1,6 @@
-import { STORAGE_KEYS } from "./data.js";
+const { STORAGE_KEYS } = window.GameData;
 
-export function createGameCore({
+function createGameCore({
   expectedMode,
   elements,
   animalsById,
@@ -318,3 +318,5 @@ export function createGameCore({
     updateHeader,
   };
 }
+
+window.createGameCore = createGameCore;
