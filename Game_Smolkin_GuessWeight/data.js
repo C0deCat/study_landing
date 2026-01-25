@@ -1,9 +1,9 @@
-export const STORAGE_KEYS = {
+const STORAGE_KEYS = {
   state: "gw_state",
   leaderboard: "gw_leaderboard",
 };
 
-export const difficulties = {
+const difficulties = {
   easy: {
     id: "easy",
     label: "Легкий",
@@ -27,17 +27,17 @@ export const difficulties = {
   },
 };
 
-export const difficultyOrder = ["easy", "medium", "hard"];
+const difficultyOrder = ["easy", "medium", "hard"];
 
-export const modes = [
+const modes = [
   { id: "weights", modeName: "Подбор гирьками", modeModifier: 1 },
   { id: "animals", modeName: "Сравнение животных", modeModifier: 3 },
   { id: "input", modeName: "Ввод веса", modeModifier: 5 },
 ];
 
-export const modeOrder = ["weights", "animals", "input"];
+const modeOrder = ["weights", "animals", "input"];
 
-export const weights = [
+const weights = [
   { mass: 1000, amount: 5, basisSize: 70 },
   { mass: 500, amount: 5, basisSize: 60 },
   { mass: 200, amount: 5, basisSize: 50 },
@@ -50,7 +50,7 @@ export const weights = [
   { mass: 1, amount: 5, basisSize: 30 },
 ];
 
-export const animals = [
+const animals = [
   { id: "lynx", name: "Рысь", weight: 27, color: "#f08a5d" },
   { id: "wolf", name: "Волк", weight: 45, color: "#b83b5e" },
   { id: "fox", name: "Лиса", weight: 6, color: "#6a2c70" },
@@ -98,7 +98,7 @@ const initialLeaderboard = [
   { name: "Илья", score: 30, difficulty: "Легкий", timed: false },
 ];
 
-export function initLeaderboard() {
+function initLeaderboard() {
   if (!localStorage.getItem(STORAGE_KEYS.leaderboard)) {
     localStorage.setItem(
       STORAGE_KEYS.leaderboard,
@@ -107,7 +107,7 @@ export function initLeaderboard() {
   }
 }
 
-export function getLeaderboard() {
+function getLeaderboard() {
   initLeaderboard();
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEYS.leaderboard)) || [];
@@ -116,11 +116,11 @@ export function getLeaderboard() {
   }
 }
 
-export function saveLeaderboard(entries) {
+function saveLeaderboard(entries) {
   localStorage.setItem(STORAGE_KEYS.leaderboard, JSON.stringify(entries));
 }
 
-export function addLeaderboardEntry(entry) {
+function addLeaderboardEntry(entry) {
   const entries = getLeaderboard();
   entries.push(entry);
   entries.sort((a, b) => b.score - a.score);
@@ -180,7 +180,7 @@ function pickFromPool(poolIds, excludedIds, count) {
   return { ids: selected, isExhausted };
 }
 
-export function pickRandomAnimals(excludedIds, count) {
+function pickRandomAnimals(excludedIds, count) {
   const available = animals.filter(
     (animal) => !excludedIds.includes(animal.id),
   );
@@ -199,7 +199,7 @@ export function pickRandomAnimals(excludedIds, count) {
   return { ids: selected.map((animal) => animal.id), isExhausted };
 }
 
-export function buildAnimalComparisonLevel(usedAnimals, count = 5) {
+function buildAnimalComparisonLevel(usedAnimals, count = 5) {
   const animalIds = animals.map((animal) => animal.id);
   let attempt = 0;
 

@@ -1,5 +1,3 @@
-import { getLeaderboard, initLeaderboard } from "./data.js";
-
 const tableBody = document.querySelector("#leaderboard-body");
 
 initLeaderboard();

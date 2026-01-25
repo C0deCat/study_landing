@@ -1,14 +1,3 @@
-import {
-  STORAGE_KEYS,
-  difficulties,
-  difficultyOrder,
-  modes,
-  modeOrder,
-  initLeaderboard,
-  buildAnimalComparisonLevel,
-  pickRandomAnimals,
-} from "./data.js";
-
 const modeContainer = document.querySelector("#mode-options");
 const difficultyContainer = document.querySelector("#difficulty-options");
 const nameInput = document.querySelector("#player-name");
@@ -234,7 +223,9 @@ window.addEventListener("keydown", (event) => {
   }
   if (event.key === "ArrowLeft" && menuFocusIndex === 0) {
     event.preventDefault();
-    selectMode((selectedModeIndex - 1 + modeButtons.length) % modeButtons.length);
+    selectMode(
+      (selectedModeIndex - 1 + modeButtons.length) % modeButtons.length,
+    );
     focusCurrentMenuItem();
     return;
   }
@@ -247,7 +238,7 @@ window.addEventListener("keydown", (event) => {
   if (event.key === "ArrowLeft" && menuFocusIndex === 1) {
     event.preventDefault();
     selectDifficulty(
-      (selectedIndex - 1 + difficultyButtons.length) % difficultyButtons.length
+      (selectedIndex - 1 + difficultyButtons.length) % difficultyButtons.length,
     );
     focusCurrentMenuItem();
     return;

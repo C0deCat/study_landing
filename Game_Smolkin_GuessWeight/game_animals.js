@@ -1,15 +1,3 @@
-import {
-  STORAGE_KEYS,
-  difficulties,
-  difficultyOrder,
-  modes,
-  animals,
-  addLeaderboardEntry,
-  buildAnimalComparisonLevel,
-  pickRandomAnimals,
-} from "./data.js";
-import { createGameCore } from "./games.js";
-
 const playerNameEl = document.querySelector("#player-name");
 const scoreEl = document.querySelector("#current-score");
 const progressEl = document.querySelector("#progress");

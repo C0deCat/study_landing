@@ -1,6 +1,4 @@
-import { STORAGE_KEYS } from "./data.js";
-
-export function createGameCore({
+function createGameCore({
   expectedMode,
   elements,
   animalsById,
@@ -120,7 +118,9 @@ export function createGameCore({
       difficulties[state.highestDifficulty]?.multiplier || 1;
     const timedMultiplier = state.timeMode ? 2 : 1;
     const modeMultiplier = getModeSettings()?.modeModifier || 1;
-    return state.baseScore * highestMultiplier * timedMultiplier * modeMultiplier;
+    return (
+      state.baseScore * highestMultiplier * timedMultiplier * modeMultiplier
+    );
   }
 
   function saveScore() {

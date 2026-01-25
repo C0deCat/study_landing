@@ -1,14 +1,3 @@
-import {
-  STORAGE_KEYS,
-  difficulties,
-  difficultyOrder,
-  modes,
-  animals,
-  addLeaderboardEntry,
-  pickRandomAnimals,
-} from "./data.js";
-import { createGameCore } from "./games.js";
-
 const playerNameEl = document.querySelector("#player-name");
 const scoreEl = document.querySelector("#current-score");
 const progressEl = document.querySelector("#progress");
@@ -100,7 +89,7 @@ function swapCard(animal) {
       () => {
         existing.remove();
       },
-      { once: true }
+      { once: true },
     );
   }
   const newCard = createAnimalCard(animal);
