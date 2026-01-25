@@ -156,6 +156,10 @@ function startGame() {
       ? createAnimalComparisonState()
       : createInitialState();
   localStorage.setItem(STORAGE_KEYS.state, JSON.stringify(state));
+  localStorage.setItem(
+    `${WINDOW_STATE_PREFIX}${selectedMode}`,
+    JSON.stringify(state),
+  );
   window.location.href =
     state.mode === "weights"
       ? "game_weights.html"

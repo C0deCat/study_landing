@@ -27,8 +27,24 @@ function createGameCore({
     }
   }
 
+  function loadFallbackState() {
+    const modeKey = `${WINDOW_STATE_PREFIX}${expectedMode}`;
+    try {
+      const raw = localStorage.getItem(modeKey);
+      return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
   function saveState() {
     localStorage.setItem(STORAGE_KEYS.state, JSON.stringify(state));
+    if (state?.mode) {
+      localStorage.setItem(
+        `${WINDOW_STATE_PREFIX}${state.mode}`,
+        JSON.stringify(state),
+      );
+    }
   }
 
   function getModeSettings() {
@@ -164,6 +180,9 @@ function createGameCore({
     exitButton.textContent = isWin ? "В меню" : "Начать заново";
     exitButton.addEventListener("click", () => {
       localStorage.removeItem(STORAGE_KEYS.state);
+      if (state?.mode) {
+        localStorage.removeItem(`${WINDOW_STATE_PREFIX}${state.mode}`);
+      }
       window.location.href = "menu.html";
     });
     elements.modalActions.appendChild(exitButton);
@@ -292,6 +311,9 @@ function createGameCore({
   }
 
   function init() {
+    if (!state) {
+      state = loadFallbackState();
+    }
     if (!state) {
       window.location.href = "menu.html";
       return;
