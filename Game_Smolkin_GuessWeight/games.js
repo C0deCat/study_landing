@@ -1,6 +1,11 @@
-const { STORAGE_KEYS } = window.GameData;
+(() => {
+  if (window.createGameCore) {
+    return;
+  }
 
-function createGameCore({
+  const { STORAGE_KEYS } = window.GameData;
+
+  function createGameCore({
   expectedMode,
   elements,
   animalsById,
@@ -310,13 +315,14 @@ function createGameCore({
     startTimer();
   }
 
-  return {
-    init,
-    handleSubmit,
-    getState: () => state,
-    currentAnimal,
-    updateHeader,
-  };
-}
+    return {
+      init,
+      handleSubmit,
+      getState: () => state,
+      currentAnimal,
+      updateHeader,
+    };
+  }
 
-window.createGameCore = createGameCore;
+  window.createGameCore = createGameCore;
+})();
