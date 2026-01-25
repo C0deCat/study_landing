@@ -21,7 +21,6 @@ const modalMessage = document.querySelector("#modal-message");
 const modalActions = document.querySelector("#modal-actions");
 const levelBadge = document.querySelector("#level-badge");
 
-const animalsById = new Map(animals.map((animal) => [animal.id, animal]));
 const gravity = 1800;
 const dragThreshold = 4;
 const doubleClickDelay = 300;

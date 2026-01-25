@@ -16,8 +16,6 @@ const modalMessage = document.querySelector("#modal-message");
 const modalActions = document.querySelector("#modal-actions");
 const levelBadge = document.querySelector("#level-badge");
 
-const animalsById = new Map(animals.map((animal) => [animal.id, animal]));
-
 const elements = {
   playerNameEl,
   scoreEl,
