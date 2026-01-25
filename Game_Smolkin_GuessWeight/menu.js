@@ -156,12 +156,16 @@ function startGame() {
       ? createAnimalComparisonState()
       : createInitialState();
   localStorage.setItem(STORAGE_KEYS.state, JSON.stringify(state));
-  window.location.href =
+  const encodedState = btoa(
+    encodeURIComponent(JSON.stringify(state)),
+  );
+  const target =
     state.mode === "weights"
       ? "game_weights.html"
       : state.mode === "animals"
         ? "game_animals.html"
         : "game_input.html";
+  window.location.href = `${target}?state=${encodedState}`;
 }
 
 startButton.addEventListener("click", startGame);

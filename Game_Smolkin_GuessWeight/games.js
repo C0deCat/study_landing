@@ -31,6 +31,22 @@ function createGameCore({
     localStorage.setItem(STORAGE_KEYS.state, JSON.stringify(state));
   }
 
+  function loadStateFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const encoded = params.get("state");
+    if (!encoded) {
+      return null;
+    }
+    try {
+      const decoded = decodeURIComponent(atob(encoded));
+      const parsed = JSON.parse(decoded);
+      window.history.replaceState({}, "", window.location.pathname);
+      return parsed;
+    } catch (error) {
+      return null;
+    }
+  }
+
   function getModeSettings() {
     return modes.find((mode) => mode.id === state.mode);
   }
@@ -125,12 +141,14 @@ function createGameCore({
 
   function saveScore() {
     const highestLabel = difficulties[state.highestDifficulty]?.label || "";
-    addLeaderboardEntry({
+    const entry = {
       name: state.playerName,
       score: computeFinalScore(),
       difficulty: highestLabel,
       timed: state.timeMode,
-    });
+    };
+    addLeaderboardEntry(entry);
+    return entry;
   }
 
   function showModal({ title, message, canContinue, isWin }) {
@@ -154,8 +172,9 @@ function createGameCore({
     saveButton.className = canContinue ? "secondary" : "primary";
     saveButton.textContent = "Сохранить результат";
     saveButton.addEventListener("click", () => {
-      saveScore();
-      window.location.href = "leaderboard.html";
+      const entry = saveScore();
+      const encoded = btoa(encodeURIComponent(JSON.stringify(entry)));
+      window.location.href = `leaderboard.html?result=${encoded}`;
     });
     elements.modalActions.appendChild(saveButton);
 
@@ -292,6 +311,12 @@ function createGameCore({
   }
 
   function init() {
+    if (!state) {
+      state = loadStateFromUrl();
+      if (state) {
+        saveState();
+      }
+    }
     if (!state) {
       window.location.href = "menu.html";
       return;
