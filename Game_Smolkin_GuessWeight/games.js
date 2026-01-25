@@ -141,12 +141,14 @@ function createGameCore({
 
   function saveScore() {
     const highestLabel = difficulties[state.highestDifficulty]?.label || "";
-    addLeaderboardEntry({
+    const entry = {
       name: state.playerName,
       score: computeFinalScore(),
       difficulty: highestLabel,
       timed: state.timeMode,
-    });
+    };
+    addLeaderboardEntry(entry);
+    return entry;
   }
 
   function showModal({ title, message, canContinue, isWin }) {
@@ -170,8 +172,9 @@ function createGameCore({
     saveButton.className = canContinue ? "secondary" : "primary";
     saveButton.textContent = "Сохранить результат";
     saveButton.addEventListener("click", () => {
-      saveScore();
-      window.location.href = "leaderboard.html";
+      const entry = saveScore();
+      const encoded = btoa(encodeURIComponent(JSON.stringify(entry)));
+      window.location.href = `leaderboard.html?result=${encoded}`;
     });
     elements.modalActions.appendChild(saveButton);
 
