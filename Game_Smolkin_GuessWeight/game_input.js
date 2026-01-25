@@ -142,7 +142,6 @@ function setupInputHandlers() {
   submitButton.addEventListener("click", game.handleSubmit);
   giveUpButton.addEventListener("click", () => {
     localStorage.removeItem(STORAGE_KEYS.state);
-    localStorage.removeItem(`${WINDOW_STATE_PREFIX}input`);
     window.location.href = "menu.html";
   });
 

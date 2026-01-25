@@ -3,8 +3,6 @@ const STORAGE_KEYS = {
   leaderboard: "gw_leaderboard",
 };
 
-const WINDOW_STATE_PREFIX = "gw_state:";
-
 const difficulties = {
   easy: {
     id: "easy",
